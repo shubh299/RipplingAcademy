@@ -97,8 +97,23 @@ class Grid2048 extends React.Component{
     super(props);
     let temp_grid = new Array(16);
     //moves_possible up,down,left,right
-    this.state = {grid: temp_grid, moves_possible: [true,true,true,true]} 
-    this.scoreUpdater = this.props.scoreUpdater
+    this.state = {grid: temp_grid, moves_possible: [true,true,true,true], new_game:true};
+    this.scoreUpdater = this.props.scoreUpdater;
+  }
+
+  static getDerivedStateFromProps(props, state){
+    if(props.newGame){
+      let random_places = random(2,0,15);
+      // random_places = [6,7];
+      let temp_grid = new Array(16);
+      for(let i = 0; i < random_places.length; i++){
+        temp_grid[ random_places[i] ] = 2;
+      }
+      return {new_game: props.newGame, grid: temp_grid};
+    }
+    else{
+      return {};
+    }
   }
 
   traversalForCheckMove(start_index_fn, next_index_fn){
@@ -221,38 +236,45 @@ class Grid2048 extends React.Component{
   }
 
   handleKeyPress = (event) => {
-    if(event.key === "ArrowUp"){
-      if(this.state.moves_possible[0]){
-
-        this.updateGridOnKeyPress((a,b)=>4*a+b);
-      }
+    if(this.state.new_game){
+      this.checkMovesPossible();
+      this.setState({new_game: false},function(){
+        this.handleKeyPress(event);
+      });
     }
-    if(event.key === "ArrowDown"){
-      if(this.state.moves_possible[1]){
-        this.updateGridOnKeyPress((a,b)=>4*(3-a)+b);
+    else{
+      if(event.key === "ArrowUp"){
+        if(this.state.moves_possible[0]){
+          this.updateGridOnKeyPress((a,b)=>4*a+b);
+        }
       }
-    }
-    if(event.key === "ArrowLeft"){
-      if(this.state.moves_possible[2]){
-        this.updateGridOnKeyPress((a,b)=>4*b+a);
+      if(event.key === "ArrowDown"){
+        if(this.state.moves_possible[1]){
+          this.updateGridOnKeyPress((a,b)=>4*(3-a)+b);
+        }
       }
-    }
-    if(event.key === "ArrowRight"){
-      if(this.state.moves_possible[3]){
-        this.updateGridOnKeyPress((a,b)=>4*(b+1)-(a+1));
+      if(event.key === "ArrowLeft"){
+        if(this.state.moves_possible[2]){
+          this.updateGridOnKeyPress((a,b)=>4*b+a);
+        }
+      }
+      if(event.key === "ArrowRight"){
+        if(this.state.moves_possible[3]){
+          this.updateGridOnKeyPress((a,b)=>4*(b+1)-(a+1));
+        }
       }
     }
   }
 
   componentDidMount(){
-    console.log("GRID mounted");
+    
     let random_places = random(2,0,15);
     // random_places = [6,7];
-    let temp_grid = [...this.state.grid];
+    let temp_grid = new Array(16);
     for(let i = 0; i < random_places.length; i++){
       temp_grid[ random_places[i] ] = 2;
     }
-    
+
     this.setState({grid: temp_grid},function(){
       this.checkMovesPossible();
       document.addEventListener("keydown", this.handleKeyPress);
@@ -279,14 +301,16 @@ class Grid2048 extends React.Component{
 class App extends React.Component {
   constructor(props){
     super(props);
-    this.state = {score: 0}
+    this.state = {score: 0, new_game_bool: false}
+    // this.new_game_bool = false;
     this.updateScore = this.updateScore.bind(this)
   }
 
   // TODO
   new_game = () => {
-    console.log("new game"); 
-    
+    this.setState({new_game_bool: true, score: 0},function(){
+      this.setState({new_game_bool: false})
+    })
   }
 
   updateScore(change_in_score){
@@ -317,7 +341,7 @@ class App extends React.Component {
           </div>
         </div>
         <div className='grid'>
-          <Grid2048 scoreUpdater={this.updateScore}/>
+          <Grid2048 scoreUpdater={this.updateScore} newGame={this.state.new_game_bool}/>
         </div>
       </div>
     );
