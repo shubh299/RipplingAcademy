@@ -55,21 +55,40 @@ class ScoreField extends React.Component{
 class Cell extends React.Component{
   constructor(props){
     super(props);
-    this.state = {value: this.props.value ? this.props.value : ' '}
+    this.state = {value: this.props.value ? this.props.value : ''}
+    this.className = "cell";
   }
 
   static getDerivedStateFromProps(props, state) {
     return {
-      value: props.value
+      value: props.value ? props.value : ''
     };
   }
 
   render(){
+    switch(this.state.value){
+      case '': this.className = "cell"; break;
+      case 2: this.className = "cell cell2"; break;
+      case 4: this.className = "cell cell4"; break;
+      case 8: this.className = "cell cell8"; break;
+      case 16: this.className = "cell cell16"; break;
+      case 32: this.className = "cell cell32"; break;
+      case 64: this.className = "cell cell64"; break;
+      case 128: this.className = "cell cell128"; break;
+      case 256: this.className = "cell cell256"; break;
+      case 512: this.className = "cell cell512"; break;
+      case 1024: this.className = "cell cell1024"; break;
+      case 2048: this.className = "cell cell2048"; break;
+      default: this.className = "cell cell2048";
+    }
     return(
-      <div className="cell">{this.state.value}</div>
+      <div className={this.className}>{this.state.value}</div>
     );
   }
 }
+
+
+function gameWon(){} //TODO
 
 function gameOver(){} //TODO
 
@@ -90,14 +109,7 @@ class Grid2048 extends React.Component{
       let defined_value = undefined;
       let start = start_index_fn(i);
 
-      // let local_row = [];
-
-      // for(let j = 0; j < 4; j++){
-      //   local_row.push(this.state.grid[next_index_fn(start,j)]);
-      // }
-
       for(let j = 0; j < 4; j++){
-        // console.log(start-4*j,this.state.grid[start - 4*j]);
         if(!defined_value_found){
           if(this.state.grid[next_index_fn(start,j)]){
             defined_value_found = true;
@@ -120,7 +132,6 @@ class Grid2048 extends React.Component{
           }
         }
       }
-      
       if(move_possible){
         break;
       }
@@ -143,9 +154,7 @@ class Grid2048 extends React.Component{
     //checking right move
     let rightmove_possible = this.traversalForCheckMove((i) => 4*i,(a,b) => a+b);
 
-    // console.log("moves_possible",this.state.moves_possible);
-    this.setState({moves_possible: [upmove_possible,downmove_possible,leftmove_possible,rightmove_possible]},
-      function(){console.log(this.state.moves_possible)});
+    this.setState({moves_possible: [upmove_possible,downmove_possible,leftmove_possible,rightmove_possible]});
   }
 
   updateGridOnKeyPress(next_cell_fn){
@@ -189,156 +198,48 @@ class Grid2048 extends React.Component{
         updated_grid[next_cell_fn(j,i)] = local_grid[i][j];
       }
     }
+    //new number addition here
+    let empty_cell_count = (updated_grid.filter(cell => cell === undefined)).length;
+    let random_position = random(1,0,empty_cell_count-1);
+    
+    for(let i = 0; i < updated_grid.length; i++){
+      if(!updated_grid[i]){
+        if(!(random_position--)){
+          updated_grid[i] = 2;
+          break;
+        }
+      }
+    }
+
     this.setState({grid: updated_grid},function(){
       this.checkMovesPossible();
-      //call parent function here and pass change in score.
       this.scoreUpdater(change_in_score)
       if(!this.state.moves_possible.includes(true)){
         gameOver();
-      }
-      else{
-        //new number addition here
-
       }
     });
   }
 
   handleKeyPress = (event) => {
-    // console.log(event);
     if(event.key === "ArrowUp"){
-      // console.log("Arrow UP pressed");
       if(this.state.moves_possible[0]){
 
         this.updateGridOnKeyPress((a,b)=>4*a+b);
-
-        //copying the column data to row representation for easy handling
-        // let local_grid = new Array(4);
-        // for(let i = 0; i < 4; i++){
-        //   local_grid[i] = new Array(4);
-        // }
-        
-        // for(let i = 0; i < 4; i++){
-        //   //copying to local grid
-        //   for(let j = 0; j < 4; j++){
-        //     local_grid[i][j] = this.state.grid[4*j + i];
-        //   }
-        //   //removed lines from here and moved to handleMoves function
-        // }
-        // console.log("copying to local grid");
-        // local_grid = this.handleMoves(local_grid);
-
-        // //updating the state
-        // let updated_grid = new Array(16);
-        // for(let i = 0; i < 4; i++){
-        //   for(let j = 0; j < 4; j++){
-        //     updated_grid[4*j + i] = local_grid[i][j];
-        //   }
-        // }
-        // console.log("local_grid",local_grid);
-        // console.log("updated_grid",updated_grid);
-        // this.setState({grid: updated_grid},function(){
-        //   this.checkMextMove();
-        // });
       }
     }
     if(event.key === "ArrowDown"){
-      // console.log("Arrow Down pressed");
       if(this.state.moves_possible[1]){
         this.updateGridOnKeyPress((a,b)=>4*(3-a)+b);
-        //copying the column data to row representation for easy handling
-        // let local_grid = new Array(4);
-        // for(let i = 0; i < 4; i++){
-        //   local_grid[i] = new Array(4);
-        // }
-        
-        // for(let i = 0; i < 4; i++){
-        //   //copying to local grid
-        //   for(let j = 0; j < 4; j++){
-        //     local_grid[i][j] = this.state.grid[4*(3-j) + i];
-        //   }
-        // }
-        // console.log(local_grid);
-        // console.log("copying to local grid");
-        // local_grid = this.handleMoves(local_grid);
-
-        // //updating the state
-        // let updated_grid = new Array(16);
-        // for(let i = 0; i < 4; i++){
-        //   for(let j = 0; j < 4; j++){
-        //     updated_grid[4*(3-j) + i] = local_grid[i][j];
-        //   }
-        // }
-        // console.log("local_grid",local_grid);
-        // console.log("updated_grid",updated_grid);
-        // this.setState({grid: updated_grid},function(){
-        //   this.checkMextMove();
-        // });
       }
     }
     if(event.key === "ArrowLeft"){
-      // console.log("Arrow Left pressed");
       if(this.state.moves_possible[2]){
         this.updateGridOnKeyPress((a,b)=>4*b+a);
-        // let local_grid = new Array(4);
-        // for(let i = 0; i < 4; i++){
-        //   local_grid[i] = new Array(4);
-        // }
-        
-        // for(let i = 0; i < 4; i++){
-        //   //copying to local grid
-        //   for(let j = 0; j < 4; j++){
-        //     local_grid[i][j] = this.state.grid[4*i + j];
-        //   }
-        // }
-        // console.log("copying to local grid");
-        // local_grid = this.handleMoves(local_grid);
-
-        // //updating the state
-        // let updated_grid = new Array(16);
-        // for(let i = 0; i < 4; i++){
-        //   for(let j = 0; j < 4; j++){
-        //     updated_grid[4*i + j] = local_grid[i][j];
-        //   }
-        // }
-        // console.log("local_grid",local_grid);
-        // console.log("updated_grid",updated_grid);
-        // this.setState({grid: updated_grid},function(){
-        //   this.checkMextMove();
-        // });
       }
     }
     if(event.key === "ArrowRight"){
-      // console.log("Arrow Right pressed");
       if(this.state.moves_possible[3]){
         this.updateGridOnKeyPress((a,b)=>4*(b+1)-(a+1));
-        //copying the column data to row representation for easy handling
-        // let local_grid = new Array(4);
-        // for(let i = 0; i < 4; i++){
-        //   local_grid[i] = new Array(4);
-        // }
-        
-        // for(let i = 0; i < 4; i++){
-        //   //copying to local grid
-        //   for(let j = 0; j < 4; j++){
-        //     local_grid[i][j] = this.state.grid[ 4*(i+1) - (j+1)];
-        //   }
-        // }
-        // console.log(local_grid);
-        // console.log("copying to local grid");
-        // local_grid = this.handleMoves(local_grid);
-
-        // //updating the state
-        // let updated_grid = new Array(16);
-        // for(let i = 0; i < 4; i++){
-        //   for(let j = 0; j < 4; j++){
-        //     updated_grid[4*(i+1) - (j+1)] = local_grid[i][j];
-        //   }
-        // }
-        // console.log("local_grid",local_grid);
-        // console.log("updated_grid",updated_grid);
-        // this.setState({grid: updated_grid},function(){
-        //   this.checkMextMove();
-        // });
       }
     }
   }
@@ -356,7 +257,6 @@ class Grid2048 extends React.Component{
       this.checkMovesPossible();
       document.addEventListener("keydown", this.handleKeyPress);
     });
-    // this.checkMovesPossible();
   }
 
   componentWillUnmount(){
@@ -383,16 +283,13 @@ class App extends React.Component {
     this.updateScore = this.updateScore.bind(this)
   }
 
-  // TO DO
+  // TODO
   new_game = () => {
     console.log("new game"); 
-    // this.render();
-    // this.setState({score:2});
+    
   }
 
-  // TO DO
   updateScore(change_in_score){
-    // console.log("change in score",change_in_score)
     this.setState((prevState,props) => ({
       score: prevState.score + change_in_score
     }));
