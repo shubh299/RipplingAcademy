@@ -1,0 +1,53 @@
+.App {
+  text-align: center;
+}
+
+.Game-logo{
+  font-size: xx-large;
+  margin: 20px;
+}
+
+.score-board{
+  display: flex;
+  justify-content: center;
+}
+
+.score-div{
+  font-weight: 600;
+  padding: 10px;
+  margin: 10px;
+  background-color: burlywood;
+  border-radius: 10px;
+}
+
+.btn-div{
+  background-color: transparent;
+}
+
+.new-game-btn{
+  padding: 10px;
+  font-weight: 800;
+  border-radius: 10px;
+  border-width: 1px;
+}
+
+.grid{
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.play-grid{
+  display: grid;
+  width: fit-content;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  background-color: #776e65;
+}
+
+.cell{
+  height:60px;
+  width:60px;
+  padding: 5px;
+  margin:10px;
+  background-color: rgba(238, 228, 218, 0.35);
+}
