@@ -79,6 +79,7 @@ class Grid2048 extends React.Component{
     let temp_grid = new Array(16);
     //moves_possible up,down,left,right
     this.state = {grid: temp_grid, moves_possible: [true,true,true,true]} 
+    this.scoreUpdater = this.props.scoreUpdater
   }
 
   traversalForCheckMove(start_index_fn, next_index_fn){
@@ -128,7 +129,7 @@ class Grid2048 extends React.Component{
   }
 
   checkMovesPossible(){
-    console.log(this.state.grid);
+    // console.log(this.state.grid);
     //checking up move
     let upmove_possible = this.traversalForCheckMove((i) => 12+i,(a,b) => a-4*b);
 
@@ -149,18 +150,15 @@ class Grid2048 extends React.Component{
 
   updateGridOnKeyPress(next_cell_fn){
     let local_grid = new Array(4);
+    let change_in_score = 0;
     for(let i = 0; i < 4; i++){
       local_grid[i] = new Array(4);
-    }
-    
-    for(let i = 0; i < 4; i++){
+
       //copying to local grid
       for(let j = 0; j < 4; j++){
         local_grid[i][j] = this.state.grid[next_cell_fn(j,i)];
       }
-    }
-    // console.log("copying to local grid");
-    for(let i = 0; i < 4; i++){
+
       //removing undefined elements 
       for(let j = 3; j >= 0; j--){
         if(!local_grid[i][j]){
@@ -168,26 +166,22 @@ class Grid2048 extends React.Component{
         }
       }
 
-      
-
-      // console.log("removing undefined elements ");
-
       //adding same elements
       for(let j = 0; j < 3; j++){
         if(local_grid[i][j] && local_grid[i][j] === local_grid[i][j+1]){
           local_grid[i][j] *= 2;
+          change_in_score += local_grid[i][j];
           local_grid[i][j+1] = undefined;
         }
       }
-      // console.log("adding same elements");
 
       //removing undefined indexes
       for(let j = local_grid[i].length-1; j > 0; j--){
         if(!local_grid[i][j])
           local_grid[i].splice(j,1);
       }
-      // console.log("removing undefined indexes");
     }
+
     //updating the state
     let updated_grid = new Array(16);
     for(let i = 0; i < 4; i++){
@@ -195,20 +189,24 @@ class Grid2048 extends React.Component{
         updated_grid[next_cell_fn(j,i)] = local_grid[i][j];
       }
     }
-    // console.log("local_grid",local_grid);
-    // console.log("updated_grid",updated_grid);
     this.setState({grid: updated_grid},function(){
       this.checkMovesPossible();
+      //call parent function here and pass change in score.
+      this.scoreUpdater(change_in_score)
       if(!this.state.moves_possible.includes(true)){
         gameOver();
-      };
+      }
+      else{
+        //new number addition here
+
+      }
     });
   }
 
   handleKeyPress = (event) => {
     // console.log(event);
     if(event.key === "ArrowUp"){
-      console.log("Arrow UP pressed");
+      // console.log("Arrow UP pressed");
       if(this.state.moves_possible[0]){
 
         this.updateGridOnKeyPress((a,b)=>4*a+b);
@@ -244,7 +242,7 @@ class Grid2048 extends React.Component{
       }
     }
     if(event.key === "ArrowDown"){
-      console.log("Arrow Down pressed");
+      // console.log("Arrow Down pressed");
       if(this.state.moves_possible[1]){
         this.updateGridOnKeyPress((a,b)=>4*(3-a)+b);
         //copying the column data to row representation for easy handling
@@ -278,7 +276,7 @@ class Grid2048 extends React.Component{
       }
     }
     if(event.key === "ArrowLeft"){
-      console.log("Arrow Left pressed");
+      // console.log("Arrow Left pressed");
       if(this.state.moves_possible[2]){
         this.updateGridOnKeyPress((a,b)=>4*b+a);
         // let local_grid = new Array(4);
@@ -310,7 +308,7 @@ class Grid2048 extends React.Component{
       }
     }
     if(event.key === "ArrowRight"){
-      console.log("Arrow Right pressed");
+      // console.log("Arrow Right pressed");
       if(this.state.moves_possible[3]){
         this.updateGridOnKeyPress((a,b)=>4*(b+1)-(a+1));
         //copying the column data to row representation for easy handling
@@ -382,6 +380,7 @@ class App extends React.Component {
   constructor(props){
     super(props);
     this.state = {score: 0}
+    this.updateScore = this.updateScore.bind(this)
   }
 
   // TO DO
@@ -392,8 +391,11 @@ class App extends React.Component {
   }
 
   // TO DO
-  updateScore(){
-
+  updateScore(change_in_score){
+    // console.log("change in score",change_in_score)
+    this.setState((prevState,props) => ({
+      score: prevState.score + change_in_score
+    }));
   }
 
   render(){
@@ -418,7 +420,7 @@ class App extends React.Component {
           </div>
         </div>
         <div className='grid'>
-          <Grid2048 />
+          <Grid2048 scoreUpdater={this.updateScore}/>
         </div>
       </div>
     );
