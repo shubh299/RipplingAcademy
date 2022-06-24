@@ -11,6 +11,21 @@
   background-color: #ccbfb2;
 }
 
+@media only screen and (max-width: 500px){
+  .cell {
+    height: 50px;
+    width: 50px;
+    padding: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    background-color: #ccbfb2;
+  }
+}
+
 .cell2 {
   background-color: #eee4da;
   color: #776e65;

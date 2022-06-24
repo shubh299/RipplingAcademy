@@ -4,6 +4,7 @@ import ScoreField from "./ScoreField";
 import Grid2048 from "./Grid2048";
 import "./App.css";
 
+// this component acts as wrapper for all the components on the board
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -13,10 +14,12 @@ class App extends React.Component {
     this.setMessage = this.setMessage.bind(this);
   }
 
+  // called by Grid2048 to set message 
   setMessage(message) {
     this.setState({ game_message: message });
   }
 
+  // called on new button click to reset the the grid
   new_game = () => {
     this.setState(
       { new_game_bool: true, score: 0, game_message: "" },
@@ -26,6 +29,7 @@ class App extends React.Component {
     );
   };
 
+  // called by Grid2048 to update the current score
   updateScore(change_in_score) {
     this.setState((prevState, props) => ({
       score: prevState.score + change_in_score,
@@ -52,6 +56,9 @@ class App extends React.Component {
             setMessage={this.setMessage}
             newGame={this.state.new_game_bool}
           />
+        </div>
+        <div className="Instructions">
+          <b>How to Play :</b> Use <b>arrow keys</b> to move the tiles. When two tiles with the same number touch, they <b>merge into one!</b>
         </div>
       </div>
     );

@@ -1,6 +1,9 @@
 import React from "react";
 import './App.css';
 
+/**
+ * Component to display score updates.
+ */
 class ScoreField extends React.Component {
   constructor(props) {
     super(props);
