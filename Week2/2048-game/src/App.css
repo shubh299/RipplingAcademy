@@ -2,17 +2,17 @@
   text-align: center;
 }
 
-.Game-logo{
+.Game-logo {
   font-size: xx-large;
   margin: 20px;
 }
 
-.score-board{
+.Score-Board {
   display: flex;
   justify-content: center;
 }
 
-.score-div{
+.Score-div {
   font-weight: 600;
   padding: 10px;
   margin: 10px;
@@ -20,97 +20,20 @@
   border-radius: 10px;
 }
 
-.btn-div{
+.Btn-div {
   background-color: transparent;
 }
 
-.new-game-btn{
+.New-Game-Btn {
   padding: 10px;
   font-weight: 800;
   border-radius: 10px;
   border-width: 1px;
 }
 
-.grid{
+.Grid-wrapper {
   display: flex;
   justify-content: center;
   margin-top: 20px;
 }
 
-.play-grid{
-  display: grid;
-  padding: 10px;
-  grid-gap: 10px;
-  border-radius: 10px;
-  width: fit-content;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  background-color: #bbac9f;
-}
-
-.cell{
-  height:100px;
-  width:100px;
-  padding: 5px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 10px;
-  font-size: 30px;
-  font-weight: 700;
-  background-color: #ccbfb2;
-}
-
-.cell2{
-  background-color: #eee4da;
-  color: #776e65;
-}
-
-.cell4{
-  background-color: #ede0c8;
-  color: #776e65;
-}
-
-.cell8{
-  background-color: #f1b178;
-  color: #f8f6f1;
-}
-
-.cell16{
-  background-color: #f59562;
-  color: #f8f6f1;
-}
-
-.cell32{
-  background-color: #f57c5f;
-  color: #f8f6f1;
-}
-
-.cell64{
-  background-color: #f55e3a;
-  color: #f8f6f1;
-}
-
-.cell128{
-  background-color: #edcf72;
-  color: #f8f6f1;
-}
-
-.cell256{
-  background-color: #edcc61;
-  color: #f8f6f1;
-}
-
-.cell512{
-  background-color: #edc850;
-  color: #f8f6f1;
-}
-
-.cell1024{
-  background-color: #edc53f;
-  color: #f8f6f1;
-}
-
-.cell2048{
-  background-color: #edc22e;
-  color: #f8f6f1;
-}
