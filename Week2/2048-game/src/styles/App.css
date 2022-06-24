@@ -22,13 +22,16 @@
 
 .Btn-div {
   background-color: transparent;
+  padding: 0px;
 }
 
 .New-Game-Btn {
-  padding: 10px;
+  padding: 20px;
   font-weight: 800;
-  border-radius: 10px;
-  border-width: 1px;
+  border-radius: 2px;
+  border-width: 0px;
+  background-color: #ca842b;
+  font: inherit;
 }
 
 .Grid-wrapper {
