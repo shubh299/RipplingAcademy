@@ -1,39 +1,52 @@
 import React from "react";
-import './Cell.css'
+import "./Cell.css";
 
-class Cell extends React.Component{
-    constructor(props){
-      super(props);
-      this.state = {value: this.props.value ? this.props.value : ''}
-      this.className = "cell";
-    }
-  
-    static getDerivedStateFromProps(props, state) {
-      return {
-        value: props.value ? props.value : ''
-      };
-    }
-  
-    render(){
-      switch(this.state.value){
-        case '': this.className = "cell"; break;
-        case 2: this.className = "cell cell2"; break;
-        case 4: this.className = "cell cell4"; break;
-        case 8: this.className = "cell cell8"; break;
-        case 16: this.className = "cell cell16"; break;
-        case 32: this.className = "cell cell32"; break;
-        case 64: this.className = "cell cell64"; break;
-        case 128: this.className = "cell cell128"; break;
-        case 256: this.className = "cell cell256"; break;
-        case 512: this.className = "cell cell512"; break;
-        case 1024: this.className = "cell cell1024"; break;
-        case 2048: this.className = "cell cell2048"; break;
-        default: this.className = "cell cell2048";
-      }
-      return(
-        <div className={this.className}>{this.state.value}</div>
-      );
-    }
-}
+/**
+ * Cell component is the cell of 2048 grid. Based on the value in cell the HTML Class for the cell changes.
+ */
+const Cell = (props) => {
+  let className = "cell";
+  switch (props.value) {
+    case undefined:
+      className = "cell";
+      break;
+    case 2:
+      className = "cell cell2";
+      break;
+    case 4:
+      className = "cell cell4";
+      break;
+    case 8:
+      className = "cell cell8";
+      break;
+    case 16:
+      className = "cell cell16";
+      break;
+    case 32:
+      className = "cell cell32";
+      break;
+    case 64:
+      className = "cell cell64";
+      break;
+    case 128:
+      className = "cell cell128";
+      break;
+    case 256:
+      className = "cell cell256";
+      break;
+    case 512:
+      className = "cell cell512";
+      break;
+    case 1024:
+      className = "cell cell1024";
+      break;
+    case 2048:
+      className = "cell cell2048";
+      break;
+    default:
+      className = "cell cell2048";
+  }
+  return <div className={className}>{props.value}</div>;
+};
 
 export default Cell;
