@@ -2,7 +2,7 @@ import React from "react";
 import GameMessage from "./GameMessage";
 import ScoreField from "./ScoreField";
 import Grid2048 from "./Grid2048";
-import "./App.css";
+import "./styles/App.css";
 
 // this component acts as wrapper for all the components on the board
 class App extends React.Component {

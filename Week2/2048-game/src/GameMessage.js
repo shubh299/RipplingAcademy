@@ -1,5 +1,5 @@
 import React from "react";
-import "./GameMessage.css";
+import "./styles/GameMessage.css";
 
 const GameMessage = (props) => {
     let className = "Game-Message";

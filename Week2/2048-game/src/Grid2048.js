@@ -1,7 +1,7 @@
 import React from "react";
 import Cell from "./Cell";
 import { random, generateInitialGrid } from "./utility_fn";
-import "./Grid2048.css";
+import "./styles/Grid2048.css";
 
 class Grid2048 extends React.Component {
   constructor(props) {

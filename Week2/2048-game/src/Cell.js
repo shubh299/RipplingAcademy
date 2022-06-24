@@ -1,5 +1,5 @@
 import React from "react";
-import "./Cell.css";
+import "./styles/Cell.css";
 
 /**
  * Cell component is the cell of 2048 grid. Based on the value in cell the HTML Class for the cell changes.
