@@ -1,0 +1,45 @@
+.App {
+  text-align: center;
+}
+
+.Game-logo {
+  font-size: xx-large;
+  margin: 20px;
+}
+
+.Score-Board {
+  display: flex;
+  justify-content: center;
+}
+
+.Score-div {
+  font-weight: 600;
+  padding: 10px;
+  margin: 10px;
+  background-color: burlywood;
+  border-radius: 10px;
+}
+
+.Btn-div {
+  background-color: transparent;
+  padding: 0px;
+}
+
+.New-Game-Btn {
+  padding: 20px;
+  font-weight: 800;
+  border-radius: 2px;
+  border-width: 0px;
+  background-color: #ca842b;
+  font: inherit;
+}
+
+.Grid-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.Instructions {
+  margin: 2%;
+}
