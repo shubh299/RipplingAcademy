@@ -25,7 +25,7 @@ const CartProduct = (props) => {
       <div className="Cart-product-title"><Link to={`/product/${props.product.sku}`}>{props.product.name}</Link></div>
       <div className="Cart-product-price">
         Price: {props.product.salePrice} * {quantity} ={" "}
-        {props.product.salePrice * quantity}
+        {(props.product.salePrice * quantity).toFixed(2)}
       </div>
       <div className="Cart-product-quantity">
         Quantity{`(max: ${props.product.quantityLimit})`}:
