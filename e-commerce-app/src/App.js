@@ -1,13 +1,13 @@
-import ProductPage from "./ProductPage";
 import React, { useState } from "react";
-import HomePage from "./HomePage";
 import { BrowserRouter, useRoutes } from "react-router-dom";
+import HomePage from "./HomePage";
+import ProductPage from "./ProductPage";
 import Cartpage from "./CartPage";
-import CartContext from "./CartContext";
+import NavBar from "./components/NavBar";
+import CartContext from "./context/CartContext";
 import storage from "./apis/persistent_storage_api";
 
 import "./Styles/App.css";
-import NavBar from "./NavBar";
 
 const Approutes = () => {
   const routes = useRoutes([

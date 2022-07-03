@@ -4,8 +4,8 @@ import {
   getCategories as getCategoriesFromApi,
   getFilteredProducts,
 } from "./apis/product_api";
-import Spinner from "./Spinner";
-import ProductCard from "./ProductCard";
+import Spinner from "./components/Spinner";
+import ProductCard from "./components/ProductCard";
 
 import "./Styles/common.css";
 import "./Styles/HomePage.css";

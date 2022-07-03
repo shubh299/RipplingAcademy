@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-import "./Styles/ProductCard.css";
+import "../Styles/ProductCard.css";
 
 const ProductCard = (props) => {
   return (

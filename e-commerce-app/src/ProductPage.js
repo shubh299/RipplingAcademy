@@ -1,8 +1,8 @@
 import { useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { getProductInfo } from "./apis/product_api";
-import Spinner from "./Spinner";
-import CartContext from "./CartContext";
+import Spinner from "./components/Spinner";
+import CartContext from "./context/CartContext";
 
 import "./Styles/ProductPage.css";
 import "./Styles/common.css";

@@ -1,9 +1,9 @@
 import { useContext } from "react";
-import CartContext from "./CartContext";
+import CartContext from "../context/CartContext";
 import { Link } from "react-router-dom";
 
-import "./Styles/common.css"
-import "./Styles/CartProduct.css";
+import "../Styles/common.css"
+import "../Styles/CartProduct.css";
 
 const CartProduct = (props) => {
   const { cartUpdater } = useContext(CartContext);
