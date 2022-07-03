@@ -2,7 +2,7 @@
     width: 100%;
     display: flex;
     background-color: #2a2a2f;
-    position: absolute;
+    position: fixed;
     height: 50px;
     flex-flow: row;
     align-items: center;

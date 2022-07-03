@@ -1,4 +1,3 @@
-import NavBar from "./NavBar";
 import { useContext } from "react";
 import CartContext from "./CartContext";
 import CartProduct from "./CartProduct";
@@ -20,7 +19,6 @@ const Cartpage = () => {
 
   return (
     <div className="Page">
-      <NavBar />
       <div className="Below-NavBar">
         <div className="Checkout-wrapper">
           <div className="Product-list-wrapper">{cartListDOM}</div>

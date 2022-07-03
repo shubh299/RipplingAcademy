@@ -4,7 +4,6 @@ import {
   getCategories as getCategoriesFromApi,
   getFilteredProducts,
 } from "./apis/product_api";
-import NavBar from "./NavBar";
 import Spinner from "./Spinner";
 import ProductCard from "./ProductCard";
 
@@ -140,7 +139,6 @@ const HomePage = () => {
   if (errorInInfo) {
     return (
       <div className="Page">
-        <NavBar />
         <div className="Product-missing">
           <div className="Missing-text">No products found</div>
         </div>
@@ -149,7 +147,6 @@ const HomePage = () => {
   } else {
     return (
       <div className="Page">
-        <NavBar />
         <div className="Below-NavBar">
           <div className="Wrapper-for-home">
             <button className="Hide-filter-button" onClick={() => {setFilterExpanded(!filterExpanded)}}>Filters</button>

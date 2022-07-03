@@ -7,11 +7,20 @@ import CartContext from "./CartContext";
 import storage from "./apis/persistent_storage_api";
 
 import "./Styles/App.css";
+import NavBar from "./NavBar";
 
 const Approutes = () => {
   const routes = useRoutes([
     {
       path: "/",
+      element: <HomePage />,
+    },
+    {
+      path: "/home",
+      element: <HomePage />,
+    },
+    {
+      path: "/index",
       element: <HomePage />,
     },
     {
@@ -62,6 +71,7 @@ function App() {
     <div className="App">
       <CartContext.Provider value={{ cart: cart, cartUpdater }}>
         <BrowserRouter>
+          <NavBar />
           <Approutes />
         </BrowserRouter>
       </CartContext.Provider>

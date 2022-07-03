@@ -1,5 +1,4 @@
 import { useParams } from "react-router-dom";
-import NavBar from "./NavBar";
 import { useContext, useEffect, useState } from "react";
 import { getProductInfo } from "./apis/product_api";
 import Spinner from "./Spinner";
@@ -45,14 +44,12 @@ const ProductPage = () => {
   if (!loaded) {
     return (
       <div className="Page">
-        <NavBar />
         <Spinner />
       </div>
     );
   } else if (!productFound)
     return (
       <div className="Page">
-        <NavBar />
         <div className="Product-missing">
           <div className="Missing-text">Product Not Found</div>
         </div>
@@ -61,7 +58,6 @@ const ProductPage = () => {
   else
     return (
       <div className="Page">
-        <NavBar />
         <div className="Below-NavBar">
           <div className="Product">
             <div className="Product-image">
