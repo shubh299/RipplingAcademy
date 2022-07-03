@@ -1,11 +1,11 @@
 import { useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
-import { getProductInfo } from "./apis/product_api";
+import { getProductInfo } from "../apis/product_api";
 import Spinner from "../Components/Spinner";
 import CartContext from "../Context/CartContext";
 
-import "./Styles/ProductPage.css";
-import "./Styles/common.css";
+import "../Styles/ProductPage.css";
+import "../Styles/common.css";
 
 //TODO: update CSS
 const ProductPage = () => {

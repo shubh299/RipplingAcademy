@@ -7,8 +7,8 @@ import {
 import Spinner from "../Components/Spinner";
 import ProductCard from "../Components/ProductCard";
 
-import "./Styles/common.css";
-import "./Styles/HomePage.css";
+import "../Styles/common.css";
+import "../Styles/HomePage.css";
 
 const min_price_ref = createRef();
 const max_price_ref = createRef();
@@ -101,7 +101,6 @@ const HomePage = () => {
   }, [filterCategories, filterPrice, selectedSortMethod, currentPage]);
 
   useEffect(() => {
-    console.log(filterExpanded);
     if(filterExpanded) filterClass = 'Filters Filter-expand';
     else filterClass = 'Filters Filter-collapse';
   },[filterExpanded]);

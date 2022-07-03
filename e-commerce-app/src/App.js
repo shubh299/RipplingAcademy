@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { BrowserRouter, useRoutes } from "react-router-dom";
-import HomePage from "./HomePage";
-import ProductPage from "./ProductPage";
-import Cartpage from "./CartPage";
+import HomePage from "./Pages/HomePage";
+import ProductPage from "./Pages/ProductPage";
+import Cartpage from "./Pages/CartPage";
 import NavBar from "./Components/NavBar";
 import CartContext from "./Context/CartContext";
 import storage from "./apis/persistent_storage_api";
