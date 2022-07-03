@@ -2,7 +2,7 @@ import FilledCart from "../Icons/FilledCart.svg";
 import EmptyCart from "../Icons/EmptyCart.svg";
 
 import { useContext } from "react";
-import CartContext from "../context/CartContext";
+import CartContext from "../Context/CartContext";
 
 import "../Styles/CartIcon.css";
 

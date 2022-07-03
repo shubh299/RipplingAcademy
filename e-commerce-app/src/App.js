@@ -3,8 +3,8 @@ import { BrowserRouter, useRoutes } from "react-router-dom";
 import HomePage from "./HomePage";
 import ProductPage from "./ProductPage";
 import Cartpage from "./CartPage";
-import NavBar from "./components/NavBar";
-import CartContext from "./context/CartContext";
+import NavBar from "./Components/NavBar";
+import CartContext from "./Context/CartContext";
 import storage from "./apis/persistent_storage_api";
 
 import "./Styles/App.css";

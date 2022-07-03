@@ -3,9 +3,9 @@ import { createRef, useEffect, useState } from "react";
 import {
   getCategories as getCategoriesFromApi,
   getFilteredProducts,
-} from "./apis/product_api";
-import Spinner from "./components/Spinner";
-import ProductCard from "./components/ProductCard";
+} from "../apis/product_api";
+import Spinner from "../Components/Spinner";
+import ProductCard from "../Components/ProductCard";
 
 import "./Styles/common.css";
 import "./Styles/HomePage.css";
