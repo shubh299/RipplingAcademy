@@ -1,9 +1,0 @@
-.Play-Grid {
-  display: grid;
-  padding: 10px;
-  grid-gap: 10px;
-  border-radius: 10px;
-  width: fit-content;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  background-color: #bbac9f;
-}
