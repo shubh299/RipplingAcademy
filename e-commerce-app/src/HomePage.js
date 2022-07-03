@@ -3,7 +3,7 @@ import { createRef, useEffect, useState } from "react";
 import {
   getCategories as getCategoriesFromApi,
   getFilteredProducts,
-} from "./api";
+} from "./apis/product_api";
 import NavBar from "./NavBar";
 import Spinner from "./Spinner";
 import ProductCard from "./ProductCard";

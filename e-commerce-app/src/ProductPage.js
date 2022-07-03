@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import NavBar from "./NavBar";
 import { useContext, useEffect, useState } from "react";
-import { getProductInfo } from "./api";
+import { getProductInfo } from "./apis/product_api";
 import Spinner from "./Spinner";
 import CartContext from "./CartContext";
 

@@ -4,6 +4,7 @@ import HomePage from "./HomePage";
 import { BrowserRouter, useRoutes } from "react-router-dom";
 import Cartpage from "./CartPage";
 import CartContext from "./CartContext";
+import storage from "./apis/persistent_storage_api";
 
 import "./Styles/App.css";
 
@@ -35,23 +36,22 @@ function App() {
       let prev_cart = [...cart];
       prev_cart = new Map(prev_cart);
       prev_cart.set(product.sku, [product, quantity]);
-      localStorage.setItem('cart',JSON.stringify([...prev_cart]));
+      storage.update('cart',prev_cart);
       setCart(prev_cart);
-      // if()
     },
     delete: (sku) => {
       let prev_cart = [...cart];
       prev_cart = new Map(prev_cart);
       prev_cart.delete(sku);
-      localStorage.setItem('cart',JSON.stringify([...prev_cart]));
+      storage.update('cart',prev_cart);
       setCart(prev_cart);
     },
   };
 
   const [cart, setCart] = useState(() => {
-    const local_storage_cart = localStorage.getItem('cart');
+    const local_storage_cart = storage.get('cart');
     if(local_storage_cart){
-      return new Map(JSON.parse(local_storage_cart));
+      return new Map(local_storage_cart);
     }
     else{
       return new Map();
