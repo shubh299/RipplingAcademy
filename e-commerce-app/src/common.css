@@ -1,0 +1,33 @@
+.Page{
+    height: 100vh;
+}
+
+.Below-NavBar{
+    padding-top: 50px;
+    height: calc(100vh - 50px);
+}
+
+.Product-missing{
+    font-size: large;
+    display: flex;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+}
+
+.Update-cart,
+.Remove-cart {
+  margin-left: 10px;
+  padding: 10px;
+  border: none;
+}
+
+.Update-cart {
+    background-color: #245dca;
+    color: #fff;
+}
+
+.Remove-cart {
+    color: #fff;
+    background-color: #f00;
+}

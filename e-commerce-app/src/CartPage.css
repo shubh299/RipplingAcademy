@@ -1,0 +1,32 @@
+.Checkout-wrapper {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+}
+
+.Checkout-details {
+  margin-top: 10px;
+}
+
+.Checkout-button {
+  background-color: #2d8ff8;
+  border: none;
+  padding: 10px;
+  color: #fff;
+}
+
+@media only screen and (max-width: 600px) {
+  .Checkout-wrapper {
+    display: block;
+  }
+
+  .Product-image {
+    max-height: auto;
+    max-width: 100%;
+    border: 1px solid lightgray;
+  }
+
+  .Product-image > img {
+    max-height: auto;
+    max-width: 100%;
+  }
+}
