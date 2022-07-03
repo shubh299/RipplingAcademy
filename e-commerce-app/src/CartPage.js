@@ -3,8 +3,8 @@ import { useContext } from "react";
 import CartContext from "./CartContext";
 import CartProduct from "./CartProduct";
 
-import "./CartPage.css";
-import "./common.css";
+import "./Styles/CartPage.css";
+import "./Styles/common.css";
 
 const Cartpage = () => {
   const { cart } = useContext(CartContext);

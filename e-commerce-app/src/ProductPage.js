@@ -3,10 +3,10 @@ import NavBar from "./NavBar";
 import { useContext, useEffect, useState } from "react";
 import { getProductInfo } from "./api";
 import Spinner from "./Spinner";
-
-import "./ProductPage.css";
-import "./common.css";
 import CartContext from "./CartContext";
+
+import "./Styles/ProductPage.css";
+import "./Styles/common.css";
 
 //TODO: update CSS
 const ProductPage = () => {

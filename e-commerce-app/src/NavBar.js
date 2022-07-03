@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import CartIconNavBar from './CartIcon';
-import './NavBar.css'
+
+import './Styles/NavBar.css'
 
 //TODO: replace link text with images
 

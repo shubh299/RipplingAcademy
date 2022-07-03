@@ -7,8 +7,9 @@ import {
 import NavBar from "./NavBar";
 import Spinner from "./Spinner";
 import ProductCard from "./ProductCard";
-import "./common.css";
-import "./HomePage.css";
+
+import "./Styles/common.css";
+import "./Styles/HomePage.css";
 
 const min_price_ref = createRef();
 const max_price_ref = createRef();

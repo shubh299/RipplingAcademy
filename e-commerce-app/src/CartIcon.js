@@ -1,10 +1,10 @@
 import FilledCart from "./Icons/FilledCart.svg";
 import EmptyCart from "./Icons/EmptyCart.svg";
 
-import "./CartIcon.css";
-
 import { useContext } from "react";
 import CartContext from "./CartContext";
+
+import "./Styles/CartIcon.css";
 
 const CartIconNavBar = () => {
   const { cart } = useContext(CartContext);

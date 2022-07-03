@@ -4,7 +4,8 @@ import HomePage from "./HomePage";
 import { BrowserRouter, useRoutes } from "react-router-dom";
 import Cartpage from "./CartPage";
 import CartContext from "./CartContext";
-import "./App.css";
+
+import "./Styles/App.css";
 
 const Approutes = () => {
   const routes = useRoutes([
