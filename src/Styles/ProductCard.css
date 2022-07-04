@@ -8,6 +8,8 @@
     display: flex;
     flex-flow: column;
     height: 500px;
+    justify-content: center;
+    align-items: center;
 }
 
 .Product-image-wrapper {
