@@ -1,0 +1,23 @@
+.Nav-bar{
+    width: 100%;
+    display: flex;
+    background-color: #2a2a2f;
+    position: fixed;
+    height: 50px;
+    flex-flow: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.Nav-bar-logo{
+    padding-left: 10px;
+}
+
+.Nav-bar-logo > a{
+    color: #fff;
+    text-decoration: none;
+}
+
+.Nav-bar-cart{
+    padding-right: 10px;
+}

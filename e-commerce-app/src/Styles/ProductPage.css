@@ -1,0 +1,85 @@
+.Product {
+  font-size: large;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  text-align: left;
+}
+
+.Product-details {
+  margin-left: 10px;
+}
+
+.Product-name {
+  font-weight: 600;
+}
+
+.Product-image {
+  max-height: 500px;
+  max-width: 500px;
+  justify-self: center;
+  border: 1px solid lightgray;
+}
+
+.Product-image > img {
+  max-height: 500px;
+  max-width: 500px;
+}
+
+.Quantity-update {
+  border: 1px grey solid;
+  display: inline-block;
+}
+
+.Quantity-update > * {
+  padding: 10px;
+  border: 0;
+  text-align: center;
+}
+
+.Product-description{
+  font-style: italic;
+  font-size: 15px;
+}
+
+.Product-page-cart-buttons{
+  margin-top: 5px;
+}
+
+.Quantity-update > button {
+  background-color: #808080;
+}
+
+/* To remove the arrows in input field*/
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+@media only screen and (max-width: 600px) {
+  .Product {
+    display: block;
+  }
+
+  .Product-image {
+    max-height: auto;
+    max-width: 100%;
+    border: 1px solid lightgray;
+  }
+  
+  .Product-image > img {
+    max-height: auto;
+    max-width: 100%;
+  }
+
+}
