@@ -1,16 +1,18 @@
 from typing import List, Optional
+
+from Player import TicTacToePlayer
 from UserPlayer import TicTacToeUserPlayer
 
 
 class TicTacToeGame:
-    def __init__(self, number_of_rows: Optional[int] = 3):
+    def __init__(self, player1: TicTacToePlayer, player2: TicTacToePlayer, number_of_rows: Optional[int] = 3):
         self._NUMBER_OF_ROWS: int = number_of_rows
         self._NUMBER_OF_COLUMNS: int = number_of_rows
         self._grid: List[List[str]] = [[' '] * self._NUMBER_OF_COLUMNS for _ in
                                        range(self._NUMBER_OF_ROWS)]  # initializing grid with empty string
 
-        self._player_1 = TicTacToeUserPlayer('X', 'X')
-        self._player_2 = TicTacToeUserPlayer('O', 'O')
+        self._player_1 = player1
+        self._player_2 = player2
         self._is_current_player_1: bool = True
 
     def _show_scores(self) -> None:
