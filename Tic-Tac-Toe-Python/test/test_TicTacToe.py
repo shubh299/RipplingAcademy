@@ -13,9 +13,30 @@ class TestTicTacToeGame(TestCase):
     def test__get_current_player(self):
         current_player = self.tic_tac_toe._get_current_player()
         self.assertEqual(current_player, self.player1)
+        self.tic_tac_toe._is_current_player_1 = not self.tic_tac_toe._is_current_player_1
+        current_player = self.tic_tac_toe._get_current_player()
+        self.assertEqual(current_player, self.player2)
 
     def test__check_win(self):
-        self.fail()
+        grids = list()
+        grids.append([[' ']*3 for _ in range(3)])
+        grids.append([['X', 'X', 'X'], ['O', 'O', 'X'], ['O', ' ', ' ']])
+        grids.append([['X', 'O', 'X'], ['O', 'O', 'O'], ['X', 'X', ' ']])
+
+        expected_outputs = [False, True, True]
+        for index, grid in enumerate(grids):
+            self.tic_tac_toe._grid = grid
+            actual_output = self.tic_tac_toe._check_win()
+            self.assertEqual(actual_output, expected_outputs[index])
 
     def test__check_game_over(self):
-        self.fail()
+        grids = list()
+        grids.append([[' ']*3 for _ in range(3)])
+        grids.append([['X', 'X', 'X'], ['O', 'O', 'X'], ['O', ' ', ' ']])
+        grids.append([['X', 'O', 'X'], ['O', 'O', 'X'], ['X', 'X', 'O']])
+
+        expected_outputs = [False, False, True]
+        for index, grid in enumerate(grids):
+            self.tic_tac_toe._grid = grid
+            actual_output = self.tic_tac_toe._check_game_over()
+            self.assertEqual(actual_output, expected_outputs[index])
