@@ -83,7 +83,7 @@ class TicTacToeGame:
         """
         The method to be called for starting the game.
         """
-        while self._check_game_over():
+        while not self._check_game_over():
             self._show_grid()
             print("Current player:", self._get_current_player().player_id)
             print("Enter new position for next move (in row,column format): ", end='')
