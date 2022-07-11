@@ -71,20 +71,19 @@ class TicTacToeGame:
 
         return False
 
-    def _check_game_over(self, move_count: int, total_moves: int) -> bool:
+    def _check_game_over(self) -> bool:
         """
-        This method needs to be an object method. Current way to check is the most basic way.
+        Current way to check is the most basic way, checks if ' ' is present in grid. Needs to be updated.
         :return: True if game is over (draw), False otherwise.
         """
-        return move_count < total_moves
+        grid_set = set([value for row in self._grid for value in row])
+        return ' ' not in grid_set
 
     def play(self) -> None:
         """
         The method to be called for starting the game.
         """
-        total_moves = self._NUMBER_OF_ROWS * self._NUMBER_OF_ROWS
-        moves_count = 0
-        while self._check_game_over(moves_count, total_moves):
+        while self._check_game_over():
             self._show_grid()
             print("Current player:", self._get_current_player().player_id)
             print("Enter new position for next move (in row,column format): ", end='')
@@ -107,11 +106,9 @@ class TicTacToeGame:
                     self._get_current_player().update_score(1)
                     break
 
-                moves_count += 1
                 self._is_current_player_1 = not self._is_current_player_1
 
             except ValueError as error:
                 print(error)
 
-        if moves_count == total_moves:
-            print("No moves possible, game draw")
+        print("No moves possible, game draw")
