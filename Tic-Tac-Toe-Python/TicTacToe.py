@@ -30,7 +30,7 @@ class TicTacToeGame:
     @classmethod
     def new_game(cls, player1: TicTacToePlayer, player2: TicTacToePlayer, number_of_rows: int):
         """
-        Sets grid to empty and current player to 1
+        Returns a new object of TicTacToe.
         :return:
         """
         return TicTacToeGame(player1, player2, number_of_rows)
@@ -73,7 +73,7 @@ class TicTacToeGame:
 
     def _check_game_over(self, move_count: int, total_moves: int) -> bool:
         """
-        This method remains to be an object method. Current way to check is the most crude way.
+        This method needs to be an object method. Current way to check is the most basic way.
         :return: True if game is over (draw), False otherwise.
         """
         return move_count < total_moves
