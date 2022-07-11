@@ -111,4 +111,5 @@ class TicTacToeGame:
             except ValueError as error:
                 print(error)
 
-        print("No moves possible, game draw")
+        if self._check_game_over():
+            print("No moves possible, game draw")
