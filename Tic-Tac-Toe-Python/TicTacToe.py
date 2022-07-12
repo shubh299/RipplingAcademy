@@ -5,25 +5,27 @@ from Player import TicTacToePlayer
 
 class TicTacToeGame:
     def __init__(self, player1: TicTacToePlayer, player2: TicTacToePlayer, number_of_rows: Optional[int] = 3):
-        self._NUMBER_OF_ROWS: int = number_of_rows
-        self._grid: List[List[str]] = [[' '] * self._NUMBER_OF_ROWS for _ in
-                                       range(self._NUMBER_OF_ROWS)]  # initializing grid with empty string
+        self._number_of_rows: int = number_of_rows
+        self._grid: List[List[str]] = self._initialize_grid()
 
         self._player_1 = player1
         self._player_2 = player2
         self._is_current_player_1: bool = True
 
+    def _initialize_grid(self) -> List[List[str]]:
+        return [[' '] * self._number_of_rows for _ in range(self._number_of_rows)]  # initializing grid with empty string
+
     def _show_grid(self) -> None:
-        for i in range(self._NUMBER_OF_ROWS):
+        for i in range(self._number_of_rows):
             print(' ', end='')
-            for j in range(self._NUMBER_OF_ROWS):
+            for j in range(self._number_of_rows):
                 print('---', end=' ')
             print('\n| ', end='')
             print(' | '.join(self._grid[i]), end=' |\n')
 
         print(' ', end='')
 
-        for j in range(self._NUMBER_OF_ROWS):
+        for j in range(self._number_of_rows):
             print('---', end=' ')
         print('\n', end='')
 
@@ -45,21 +47,21 @@ class TicTacToeGame:
         main_diagonal = list()
         alternate_diagonal = list()
 
-        for i in range(self._NUMBER_OF_ROWS):
+        for i in range(self._number_of_rows):
             # checking row
             if check_all_elements_are_same(self._grid[i], self._player_1.player_id) or \
                     check_all_elements_are_same(self._grid[i], self._player_2.player_id):
                 return True
 
             # checking ith column
-            ith_column = [self._grid[j][i] for j in range(self._NUMBER_OF_ROWS)]
+            ith_column = [self._grid[j][i] for j in range(self._number_of_rows)]
 
             if check_all_elements_are_same(ith_column, self._player_1.player_id) or \
                     check_all_elements_are_same(ith_column, self._player_2.player_id):
                 return True
 
             main_diagonal.append(self._grid[i][i])
-            alternate_diagonal.append(self._grid[i][self._NUMBER_OF_ROWS - i - 1])
+            alternate_diagonal.append(self._grid[i][self._number_of_rows - i - 1])
 
         if check_all_elements_are_same(main_diagonal, self._player_1.player_id) or \
                 check_all_elements_are_same(main_diagonal, self._player_2.player_id):
@@ -88,7 +90,7 @@ class TicTacToeGame:
             print("Current player:", self._get_current_player().player_id)
             print("Enter new position for next move (in row,column format): ", end='')
             try:
-                new_row, new_col = self._get_current_player().next_move(self._NUMBER_OF_ROWS)
+                new_row, new_col = self._get_current_player().next_move(self._number_of_rows)
 
                 if new_row == -1:
                     raise ValueError("Invalid Input")
