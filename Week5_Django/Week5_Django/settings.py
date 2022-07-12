@@ -51,13 +51,12 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'djangoProject.urls'
+ROOT_URLCONF = 'Week5_Django.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
-        ,
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -78,9 +77,10 @@ WSGI_APPLICATION = 'Week5_Django.wsgi.application'
 # mongo username food-app-admin
 # mongo pass Zhbpg0r8YnUUlPnd
 
-mongoengine.connect(host="cluster0.limeldg.mongodb.net", username="food-app-admin", password="Zhbpg0r8YnUUlPnd")
+# mongoengine.connect(host="cluster0.limeldg.mongodb.net", username="food-app-admin", password="Zhbpg0r8YnUUlPnd")
 
-#mongoengine.connect("mongodb+srv://food-app-admin:Zhbpg0r8YnUUlPnd@cluster0.limeldg.mongodb.net/?retryWrites=true&w=majority")
+mongoengine.connect(host="mongodb+srv://food-app-admin:Zhbpg0r8YnUUlPnd@cluster0.limeldg.mongodb.net/?retryWrites"
+                         "=true&w=majority", db="food_ordering_app")
 # commented out for MongoDB
 # DATABASES = {
 #     'default': {
