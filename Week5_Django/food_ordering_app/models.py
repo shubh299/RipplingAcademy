@@ -6,7 +6,7 @@ user_types = ('app_admin', 'restaurant_manager', 'customer')
 class User(Document):
     email = EmailField(required=True, unique=True)
     password = StringField(required=True)
-    type = StringField(choices=user_types)
+    user_type = StringField(choices=user_types)
 
 
 class Restaurant(Document):

@@ -77,8 +77,6 @@ WSGI_APPLICATION = 'Week5_Django.wsgi.application'
 # mongo username food-app-admin
 # mongo pass Zhbpg0r8YnUUlPnd
 
-# mongoengine.connect(host="cluster0.limeldg.mongodb.net", username="food-app-admin", password="Zhbpg0r8YnUUlPnd")
-
 mongoengine.connect(host="mongodb+srv://food-app-admin:Zhbpg0r8YnUUlPnd@cluster0.limeldg.mongodb.net/?retryWrites"
                          "=true&w=majority", db="food_ordering_app")
 # commented out for MongoDB
