@@ -13,11 +13,8 @@ class Restaurant(Document):
     name = StringField(required=True)
     address = StringField(required=True)
     cuisines = ListField()
-    logo = ImageField()  # this needs to be changed to url or storage location for future
+    logo = StringField()  # this needs to be changed to url or storage location for future
     manager = ReferenceField(User, reverse_delete_rule=CASCADE)
-
-
-dish_category = ()
 
 
 class Dish(Document):
@@ -25,7 +22,7 @@ class Dish(Document):
     description = StringField()
     dish_image = ImageField()
     is_veg = BooleanField()
-    category = StringField(choices=dish_category)
+    category = StringField()
     availability = BooleanField(default=False)
     restaurant_from = ReferenceField(Restaurant)
     # availability_duration = ListField()
