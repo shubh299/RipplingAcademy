@@ -7,7 +7,8 @@ from mongoengine import Q
 
 from food_ordering_app.models import Restaurant, User
 from food_ordering_app.processing_exceptions import *
-from food_ordering_app.utility_functions import get_random_password
+from food_ordering_app.utility_functions import get_random_password, get_parameter_dict
+
 
 # TODO: make process functions shorter
 # TODO: check for authentication
@@ -87,16 +88,6 @@ def get_restaurant(parameters: Dict) -> Restaurant:
     if restaurant_in_db is None:
         raise RestaurantNotFoundException("Restaurant not found")
     return restaurant_in_db
-
-
-def get_parameter_dict(request_body: str) -> Dict:
-    try:
-        parameter_dict = json.loads(request_body)
-        return parameter_dict
-    except TypeError:
-        raise BadRequestBody
-    except json.decoder.JSONDecodeError:
-        raise BadRequestBody
 
 
 def default_path(request):
