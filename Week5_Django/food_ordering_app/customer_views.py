@@ -83,6 +83,15 @@ def search_dish_by_restaurant(request):
         return HttpResponseBadRequest('No restaurant asked')
     restaurant_id = request.GET['restaurant-id']
     dishes = get_dishes_by_restaurant_name(restaurant_id)
-    print(dishes)
+    serializer = DishSerializer(dishes, many=True)
+    return Response(serializer.data)
+
+
+@api_view(('GET',))
+def search_dish_across_restaurants(request):
+    if 'dish-name' not in request.GET:
+        return HttpResponseBadRequest('No dishes asked')
+    dish_name = request.GET['dish-name']
+    dishes = get_dishes_by_name(dish_name)
     serializer = DishSerializer(dishes, many=True)
     return Response(serializer.data)
