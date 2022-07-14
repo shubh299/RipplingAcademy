@@ -6,6 +6,10 @@ class WrongParameter(Exception):
     pass
 
 
+class UserNotFoundException(Exception):
+    pass
+
+
 class UserExistsException(Exception):
     pass
 
@@ -19,4 +23,12 @@ class RestaurantNotFoundException(Exception):
 
 
 class BadRequestBody(Exception):
+    pass
+
+
+class DishExistsError(Exception):
+    pass
+
+
+class DishNotFoundException(Exception):
     pass

@@ -3,11 +3,12 @@ from typing import Dict
 
 from django.http import HttpResponseNotAllowed, HttpResponse, HttpResponseBadRequest
 from django.views.decorators.csrf import csrf_exempt
+from django.utils.crypto import get_random_string
 
 from food_ordering_app.db_queries import *
 from food_ordering_app.models import Restaurant, User
 from food_ordering_app.processing_exceptions import *
-from food_ordering_app.utility_functions import get_random_password, get_parameter_dict, check_params
+from food_ordering_app.utility_functions import get_parameter_dict, check_params
 
 
 # TODO: make process functions shorter
@@ -33,7 +34,7 @@ def process_manager_parameters(parameters: Dict) -> User:
 
     new_manager = User(user_type="restaurant_manager")
     new_manager.email = manager_email
-    new_manager.password = get_random_password()
+    new_manager.auth_token = get_random_string(length=32)
 
     return new_manager
 

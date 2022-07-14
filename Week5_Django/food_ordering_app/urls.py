@@ -1,6 +1,6 @@
 from django.urls import path, include
 
-from food_ordering_app import views, admin_views
+from food_ordering_app import views, admin_views, restaurant_manager_views
 
 admin_patterns = [
     path('', admin_views.default_path),
@@ -9,7 +9,14 @@ admin_patterns = [
     path('delete-restaurant', admin_views.delete_restaurant)
 ]
 
+restaurant_manager_patterns = [
+    path('', restaurant_manager_views.default_path),
+    path('add-dish', restaurant_manager_views.add_dish),
+    path('delete-dish', restaurant_manager_views.delete_dish),
+]
+
 urlpatterns = [
     path('', views.food_app_home),
-    path('admin/', include(admin_patterns))
+    path('admin/', include(admin_patterns)),
+    path('restaurant/', include(restaurant_manager_patterns))
 ]

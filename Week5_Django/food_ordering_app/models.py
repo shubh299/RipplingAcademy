@@ -5,7 +5,7 @@ user_types = ('app_admin', 'restaurant_manager', 'customer')
 
 class User(Document):
     email = EmailField(required=True, unique=True)
-    password = StringField(required=True)
+    auth_token = StringField(required=True)
     user_type = StringField(choices=user_types)
 
 
@@ -20,10 +20,10 @@ class Restaurant(Document):
 class Dish(Document):
     name = StringField(required=True)
     description = StringField()
-    dish_image = ImageField()
+    dish_image = StringField()
     is_veg = BooleanField()
-    category = StringField()
-    availability = BooleanField(default=False)
+    cuisine = StringField()
+    availability = BooleanField(default=True)
     restaurant_from = ReferenceField(Restaurant)
     # availability_duration = ListField()
 
