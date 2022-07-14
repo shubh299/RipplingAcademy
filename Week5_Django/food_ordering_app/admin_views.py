@@ -4,6 +4,7 @@ from typing import Dict
 from django.http import HttpResponseNotAllowed, HttpResponse, HttpResponseBadRequest
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.crypto import get_random_string
+from django.views.decorators.http import require_POST
 
 from food_ordering_app.db_queries import *
 from food_ordering_app.models import Restaurant, User
@@ -13,7 +14,7 @@ from food_ordering_app.utility_functions import get_parameter_dict, check_params
 
 # TODO: make process functions shorter
 # TODO: check for authentication
-# TODO: remove csrf exempt decorator
+# TODO: add drf
 
 
 def process_manager_parameters(parameters: Dict) -> User:
@@ -95,61 +96,56 @@ views start here
 
 
 @csrf_exempt
+@require_POST()
 def add_restaurant_manager(request):
-    if request.method == 'POST':
-        try:
-            parameters = get_parameter_dict(request.body)
-            new_manager = process_manager_parameters(parameters)
-            new_manager.save()
-            return HttpResponse(json.dumps({"password": new_manager.password}))
-        except InsufficientParameters as insufficient_parameters:
-            print("Exception:", insufficient_parameters)
-        except WrongParameter as wrong_parameters:
-            print("Exception:", wrong_parameters)
-        except UserExistsException as error:
-            print("Exception:", error)
-            return HttpResponseBadRequest("User Exists")
-        return HttpResponseBadRequest("Wrong parameters/parameters missing")
-    else:
-        return HttpResponseNotAllowed(['POST'])
+    try:
+        parameters = get_parameter_dict(request.body)
+        new_manager = process_manager_parameters(parameters)
+        new_manager.save()
+        return HttpResponse(json.dumps({"password": new_manager.password}))
+    except InsufficientParameters as insufficient_parameters:
+        print("Exception:", insufficient_parameters)
+    except WrongParameter as wrong_parameters:
+        print("Exception:", wrong_parameters)
+    except UserExistsException as error:
+        print("Exception:", error)
+        return HttpResponseBadRequest("User Exists")
+    return HttpResponseBadRequest("Wrong parameters/parameters missing")
 
 
 @csrf_exempt
+@require_POST()
 def add_restaurant(request):
-    if request.method == 'POST':
-        try:
-            parameters = get_parameter_dict(request.body)
-            new_restaurant = process_new_restaurant_parameters(parameters)
-            new_restaurant.save()
-            return HttpResponse("Got new restaurant request")
-        except InsufficientParameters as insufficient_parameters:
-            print("Exception:", insufficient_parameters)
-        except WrongParameter as wrong_parameters:
-            print("Exception:", wrong_parameters)
-        except RestaurantExistsException as restaurant_found:
-            print("Exception:", restaurant_found)
-        except BadRequestBody as error:
-            print("Exception:", error)
-        return HttpResponseBadRequest("Wrong parameters/parameters missing")
-    else:
-        return HttpResponseNotAllowed(['POST'])
+    try:
+        parameters = get_parameter_dict(request.body)
+        new_restaurant = process_new_restaurant_parameters(parameters)
+        new_restaurant.save()
+        return HttpResponse("Got new restaurant request")
+    except InsufficientParameters as insufficient_parameters:
+        print("Exception:", insufficient_parameters)
+    except WrongParameter as wrong_parameters:
+        print("Exception:", wrong_parameters)
+    except RestaurantExistsException as restaurant_found:
+        print("Exception:", restaurant_found)
+    except BadRequestBody as error:
+        print("Exception:", error)
+    return HttpResponseBadRequest("Wrong parameters/parameters missing")
 
 
 @csrf_exempt
+@require_POST()
 def delete_restaurant(request):
-    if request.method == 'POST':
-        try:
-            parameters = get_parameter_dict(request.body)
-            restaurant = get_restaurant(parameters)
-            restaurant.delete()
-            return HttpResponse("deleted restaurant")
-        except InsufficientParameters as error:
-            print("Exception:", error)
-        except RestaurantNotFoundException as error:
-            print("Exception:", error)
-            return HttpResponseBadRequest("Restaurant Not Found")
-        except BadRequestBody as error:
-            print("Exception:", error)
-        return HttpResponseBadRequest("Wrong parameters/parameters missing")
-    else:
-        return HttpResponseNotAllowed(['POST'])
+    try:
+        parameters = get_parameter_dict(request.body)
+        restaurant = get_restaurant(parameters)
+        restaurant.delete()
+        return HttpResponse("deleted restaurant")
+    except InsufficientParameters as error:
+        print("Exception:", error)
+    except RestaurantNotFoundException as error:
+        print("Exception:", error)
+        return HttpResponseBadRequest("Restaurant Not Found")
+    except BadRequestBody as error:
+        print("Exception:", error)
+    return HttpResponseBadRequest("Wrong parameters/parameters missing")
+
