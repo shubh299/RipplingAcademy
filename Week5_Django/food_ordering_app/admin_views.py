@@ -1,11 +1,12 @@
 import json
 from typing import Dict
 
-from django.http import HttpResponseNotAllowed, HttpResponse, HttpResponseBadRequest
+from django.http import HttpResponse, HttpResponseBadRequest
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.crypto import get_random_string
 from django.views.decorators.http import require_POST
 
+from food_ordering_app.constants import AUTH_TOKEN_LENGTH
 from food_ordering_app.db_queries import *
 from food_ordering_app.models import Restaurant, User
 from food_ordering_app.processing_exceptions import *
@@ -35,7 +36,7 @@ def process_manager_parameters(parameters: Dict) -> User:
 
     new_manager = User(user_type="restaurant_manager")
     new_manager.email = manager_email
-    new_manager.auth_token = get_random_string(length=32)
+    new_manager.auth_token = get_random_string(length=AUTH_TOKEN_LENGTH)
 
     return new_manager
 
@@ -96,13 +97,13 @@ views start here
 
 
 @csrf_exempt
-@require_POST()
+@require_POST
 def add_restaurant_manager(request):
     try:
         parameters = get_parameter_dict(request.body)
         new_manager = process_manager_parameters(parameters)
         new_manager.save()
-        return HttpResponse(json.dumps({"password": new_manager.password}))
+        return HttpResponse(json.dumps({"auth-token": new_manager.auth_token}))
     except InsufficientParameters as insufficient_parameters:
         print("Exception:", insufficient_parameters)
     except WrongParameter as wrong_parameters:
@@ -110,11 +111,13 @@ def add_restaurant_manager(request):
     except UserExistsException as error:
         print("Exception:", error)
         return HttpResponseBadRequest("User Exists")
+    except BadRequestBody as error:
+        print("Exception:", error)
     return HttpResponseBadRequest("Wrong parameters/parameters missing")
 
 
 @csrf_exempt
-@require_POST()
+@require_POST
 def add_restaurant(request):
     try:
         parameters = get_parameter_dict(request.body)
@@ -133,7 +136,7 @@ def add_restaurant(request):
 
 
 @csrf_exempt
-@require_POST()
+@require_POST
 def delete_restaurant(request):
     try:
         parameters = get_parameter_dict(request.body)
