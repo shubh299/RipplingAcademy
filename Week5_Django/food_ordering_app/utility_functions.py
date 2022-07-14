@@ -1,5 +1,4 @@
 import json
-import secrets
 from typing import Dict, List
 
 from food_ordering_app.processing_exceptions import BadRequestBody, InsufficientParameters
