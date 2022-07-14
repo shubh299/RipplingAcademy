@@ -7,7 +7,7 @@ from mongoengine import Q
 
 from food_ordering_app.models import Restaurant, User
 from food_ordering_app.processing_exceptions import *
-from food_ordering_app.utility_functions import get_random_password, get_parameter_dict
+from food_ordering_app.utility_functions import get_random_password, get_parameter_dict, check_params
 
 
 # TODO: make process functions shorter
@@ -18,9 +18,7 @@ from food_ordering_app.utility_functions import get_random_password, get_paramet
 def process_manager_parameters(parameters: Dict) -> User:
     expected_manager_parameters = ['manager-email', 'user-type']
 
-    for param in expected_manager_parameters:
-        if param not in parameters or len(parameters.get(param)) == 0:
-            raise InsufficientParameters(f"{param} missing")
+    check_params(expected_manager_parameters, parameters)
 
     manager_email = parameters.get("manager-email")
     user_in_db = User.objects(email=manager_email)
@@ -50,9 +48,8 @@ def process_new_restaurant_parameters(parameters: Dict) -> Restaurant:
     expected_restaurant_params = ["restaurant-name", "restaurant-address", "restaurant-cuisines",
                                   "restaurant-manager-email", "restaurant-logo"]
 
-    for param in expected_restaurant_params:
-        if param not in parameters or len(parameters.get(param)) == 0:
-            raise InsufficientParameters(f"{param} missing")
+    check_params(expected_restaurant_params, parameters)
+
     if not isinstance(parameters.get("restaurant-cuisines"), list):
         raise WrongParameter("cuisines not a list")
 
@@ -77,11 +74,10 @@ def process_new_restaurant_parameters(parameters: Dict) -> Restaurant:
 
 
 def get_restaurant(parameters: Dict) -> Restaurant:
-    expected_parameters = ["restaurant-name", "restaurant-address"]
+    expected_restaurant_parameters = ["restaurant-name", "restaurant-address"]
 
-    for param in expected_parameters:
-        if param not in parameters or len(parameters.get(param)) == 0:
-            raise InsufficientParameters(f"{param} missing")
+    check_params(expected_restaurant_parameters, parameters)
+
     restaurant_name = parameters.get("restaurant-name")
     restaurant_address = parameters.get("restaurant-address")
     restaurant_in_db = search_restaurant_in_db(restaurant_name, restaurant_address)
@@ -93,6 +89,11 @@ def get_restaurant(parameters: Dict) -> Restaurant:
 def default_path(request):
     print(request)
     return HttpResponse("admin_home")
+
+
+"""
+views start here
+"""
 
 
 @csrf_exempt
