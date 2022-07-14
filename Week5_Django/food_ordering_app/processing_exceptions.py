@@ -16,3 +16,7 @@ class RestaurantExistsException(Exception):
 
 class RestaurantNotFoundException(Exception):
     pass
+
+
+class BadRequestBody(Exception):
+    pass
