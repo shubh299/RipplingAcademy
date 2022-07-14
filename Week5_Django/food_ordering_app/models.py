@@ -12,9 +12,9 @@ class User(Document):
 class Restaurant(Document):
     name = StringField(required=True)
     address = StringField(required=True)
-    cuisines = ListField()
+    cuisines = ListField(StringField())
     logo = StringField()  # this needs to be changed to url or storage location for future
-    manager = ReferenceField(User, reverse_delete_rule=CASCADE)
+    manager = ReferenceField(User, reverse_delete_rule=CASCADE, required=True)
 
 
 class Dish(Document):

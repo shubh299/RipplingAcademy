@@ -5,11 +5,14 @@ from django.http import HttpResponse, HttpResponseBadRequest
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST, require_GET
 from django.utils.crypto import get_random_string
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 from food_ordering_app.constants import AUTH_TOKEN_LENGTH
-from food_ordering_app.db_queries import get_user_from_db_by_email
+from food_ordering_app.db_queries import get_user_from_db_by_email, get_restaurant_by_filter
 from food_ordering_app.models import User
 from food_ordering_app.processing_exceptions import *
+from food_ordering_app.serializers import RestaurantSerializer
 from food_ordering_app.utility_functions import get_parameter_dict, check_params
 
 
@@ -65,7 +68,10 @@ def add_user(request):
     return HttpResponseBadRequest("Wrong parameters/parameters missing")
 
 
-@require_GET
+@api_view(('GET',))
 def search_restaurant(request):
-    print(request)
-    pass
+    restaurant_name = request.GET.get('name', '')
+    cuisines = request.GET.get('cuisines', list())
+    restaurants = get_restaurant_by_filter(restaurant_name, cuisines)
+    serializer = RestaurantSerializer(restaurants, many=True)
+    return Response(serializer.data)

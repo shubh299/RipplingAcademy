@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'food_ordering_app.apps.FoodOrderingAppConfig',
+    'rest_framework',
+    'rest_framework_mongoengine'
 ]
 
 MIDDLEWARE = [

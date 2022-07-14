@@ -69,7 +69,7 @@ def process_new_restaurant_parameters(parameters: Dict) -> Restaurant:
     new_restaurant.address = parameters.get("restaurant-address")
     new_restaurant.cuisines = parameters.get("restaurant-cuisines")
     new_restaurant.logo = parameters.get("restaurant-logo")
-    new_restaurant.manager = manager_in_db[0]
+    new_restaurant.manager = manager_in_db
     return new_restaurant
 
 
@@ -130,6 +130,7 @@ def add_restaurant(request):
         print("Exception:", wrong_parameters)
     except RestaurantExistsException as restaurant_found:
         print("Exception:", restaurant_found)
+        return HttpResponseBadRequest("Restaurant already exists")
     except BadRequestBody as error:
         print("Exception:", error)
     return HttpResponseBadRequest("Wrong parameters/parameters missing")
