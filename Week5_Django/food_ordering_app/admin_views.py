@@ -3,8 +3,8 @@ from typing import Dict
 
 from django.http import HttpResponseNotAllowed, HttpResponse, HttpResponseBadRequest
 from django.views.decorators.csrf import csrf_exempt
-from mongoengine import Q
 
+from food_ordering_app.db_queries import *
 from food_ordering_app.models import Restaurant, User
 from food_ordering_app.processing_exceptions import *
 from food_ordering_app.utility_functions import get_random_password, get_parameter_dict, check_params
@@ -21,9 +21,10 @@ def process_manager_parameters(parameters: Dict) -> User:
     check_params(expected_manager_parameters, parameters)
 
     manager_email = parameters.get("manager-email")
-    user_in_db = User.objects(email=manager_email)
 
-    if len(user_in_db) != 0:
+    users_in_db = get_user_from_db_by_email(email=manager_email)
+
+    if len(users_in_db) != 0:
         raise UserExistsException("manager email already exists")
 
     user_type = parameters.get("user-type")
@@ -37,13 +38,6 @@ def process_manager_parameters(parameters: Dict) -> User:
     return new_manager
 
 
-def search_restaurant_in_db(restaurant_name: str, restaurant_address: str) -> Restaurant:
-    restaurant_in_db = Restaurant.objects(Q(name=restaurant_name) & Q(address=restaurant_address))
-    if len(restaurant_in_db) == 0:
-        return None
-    return restaurant_in_db[0]
-
-
 def process_new_restaurant_parameters(parameters: Dict) -> Restaurant:
     expected_restaurant_params = ["restaurant-name", "restaurant-address", "restaurant-cuisines",
                                   "restaurant-manager-email", "restaurant-logo"]
@@ -54,14 +48,17 @@ def process_new_restaurant_parameters(parameters: Dict) -> Restaurant:
         raise WrongParameter("cuisines not a list")
 
     manager_email = parameters.get("restaurant-manager-email")
-    manager_in_db = User.objects(Q(user_type="restaurant_manager") & Q(email=manager_email))
-    if len(manager_in_db) == 0:
+
+    manager_in_db = get_user_from_db_by_email(email=manager_email)
+
+    if len(manager_in_db) == 0 or manager_in_db[0].user_type != "restaurant_manager":
         raise WrongParameter("manager not in db")
+    manager_in_db = manager_in_db[0]  # taking first user in the list
 
     restaurant_name = parameters.get("restaurant-name")
     restaurant_address = parameters.get("restaurant-address")
-    restaurant_in_db = search_restaurant_in_db(restaurant_name, restaurant_address)
-    if restaurant_in_db is not None:
+    restaurant_in_db = get_restaurant_from_db(restaurant_name, restaurant_address)
+    if len(restaurant_in_db) != 0:
         raise RestaurantExistsException("Restaurant already exists")
 
     new_restaurant = Restaurant()
@@ -80,10 +77,10 @@ def get_restaurant(parameters: Dict) -> Restaurant:
 
     restaurant_name = parameters.get("restaurant-name")
     restaurant_address = parameters.get("restaurant-address")
-    restaurant_in_db = search_restaurant_in_db(restaurant_name, restaurant_address)
-    if restaurant_in_db is None:
+    restaurant_in_db = get_restaurant_from_db(restaurant_name, restaurant_address)
+    if len(restaurant_in_db) == 0:
         raise RestaurantNotFoundException("Restaurant not found")
-    return restaurant_in_db
+    return restaurant_in_db[0]
 
 
 def default_path(request):
