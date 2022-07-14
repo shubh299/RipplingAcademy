@@ -12,3 +12,7 @@ class UserExistsException(Exception):
 
 class RestaurantExistsException(Exception):
     pass
+
+
+class RestaurantNotFoundException(Exception):
+    pass

@@ -1,23 +1,24 @@
 import json
 from typing import Dict
 
-from django.http import HttpResponseNotAllowed, HttpResponse
+from django.http import HttpResponseNotAllowed, HttpResponse, HttpResponseBadRequest
 from django.views.decorators.csrf import csrf_exempt
 from mongoengine import Q
 
 from food_ordering_app.models import Restaurant, User
-from food_ordering_app.processing_exceptions import InsufficientParameters, WrongParameter, UserExistsException, \
-    RestaurantExistsException
+from food_ordering_app.processing_exceptions import *
 from food_ordering_app.utility_functions import get_random_password
 
 # TODO: make process functions shorter
 # TODO: check for authentication
+# TODO: remove csrf exempt decorator
+# TODO: move json loads to process function or create separate function and raise exception there
 
 
 def process_manager_parameters(parameters: Dict) -> User:
-    manager_parameters = ['manager-email', 'user-type']
+    expected_manager_parameters = ['manager-email', 'user-type']
 
-    for param in manager_parameters:
+    for param in expected_manager_parameters:
         if param not in parameters or len(parameters.get(param)) == 0:
             raise InsufficientParameters(f"{param} missing")
 
@@ -38,11 +39,11 @@ def process_manager_parameters(parameters: Dict) -> User:
     return new_manager
 
 
-def process_restaurant_parameters(parameters: Dict) -> Restaurant:
-    restaurant_params = ["restaurant-name", "restaurant-address", "restaurant-cuisines", "restaurant-manager-email",
-                         "restaurant-logo"]
+def process_new_restaurant_parameters(parameters: Dict) -> Restaurant:
+    expected_restaurant_params = ["restaurant-name", "restaurant-address", "restaurant-cuisines",
+                                  "restaurant-manager-email", "restaurant-logo"]
 
-    for param in restaurant_params:
+    for param in expected_restaurant_params:
         if param not in parameters or len(parameters.get(param)) == 0:
             raise InsufficientParameters(f"{param} missing")
 
@@ -65,8 +66,22 @@ def process_restaurant_parameters(parameters: Dict) -> Restaurant:
     new_restaurant.address = parameters.get("restaurant-address")
     new_restaurant.cuisines = parameters.get("restaurant-cuisines")
     new_restaurant.logo = parameters.get("restaurant-logo")
-    new_restaurant.manager = manager_email
+    new_restaurant.manager = manager_in_db[0]
     return new_restaurant
+
+
+def get_restaurant(parameters: Dict) -> Restaurant:
+    expected_parameters = ["restaurant-name", "restaurant-address"]
+
+    for param in expected_parameters:
+        if param not in parameters or len(parameters.get(param)) == 0:
+            raise InsufficientParameters(f"{param} missing")
+    restaurant_name = parameters.get("restaurant-name")
+    restaurant_address = parameters.get("restaurant-address")
+    restaurant_in_db = Restaurant.objects(Q(name=restaurant_name) & Q(address=restaurant_address))
+    if len(restaurant_in_db) == 0:
+        raise RestaurantNotFoundException("Restaurant not found exists")
+    return restaurant_in_db[0]
 
 
 def default_path(request):
@@ -81,11 +96,15 @@ def add_restaurant_manager(request):
             parameters = json.loads(request.body)
             new_manager = process_manager_parameters(parameters)
             new_manager.save()
+            return HttpResponse(json.dumps({"password": new_manager.password}))
         except InsufficientParameters as insufficient_parameters:
             print("Error:", insufficient_parameters)
         except WrongParameter as wrong_parameters:
             print("Error:", wrong_parameters)
-        return HttpResponse("Got new manager request")
+        except UserExistsException as error:
+            print("Error:", error)
+            return HttpResponseBadRequest("User Exists")
+        return HttpResponseBadRequest("Wrong parameters/parameters missing")
     else:
         return HttpResponseNotAllowed(['POST'])
 
@@ -95,15 +114,32 @@ def add_restaurant(request):
     if request.method == 'POST':
         try:
             parameters = json.loads(request.body)
-            new_restaurant = process_restaurant_parameters(parameters)
+            new_restaurant = process_new_restaurant_parameters(parameters)
             new_restaurant.save()
+            return HttpResponse("Got new restaurant request")
         except InsufficientParameters as insufficient_parameters:
             print("Exception", insufficient_parameters)
         except WrongParameter as wrong_parameters:
             print("Exception", wrong_parameters)
         except RestaurantExistsException as restaurant_found:
             print("Exception", restaurant_found)
-        return HttpResponse("Got new  request")
+        return HttpResponseBadRequest("Wrong parameters/parameters missing")
     else:
         return HttpResponseNotAllowed(['POST'])
 
+
+@csrf_exempt
+def delete_restaurant(request):
+    if request.method == 'POST':
+        try:
+            parameters = json.loads(request.body)
+            restaurant = get_restaurant(parameters)
+            restaurant.delete()
+            return HttpResponse("deleted restaurant")
+        except InsufficientParameters as error:
+            print(error)
+        except RestaurantNotFoundException as error:
+            print(error)
+        return HttpResponseBadRequest("Wrong parameters/parameters missing")
+    else:
+        return HttpResponseNotAllowed(['POST'])

@@ -5,7 +5,8 @@ from food_ordering_app import views, admin_views
 admin_patterns = [
     path('', admin_views.default_path),
     path('add-restaurant', admin_views.add_restaurant),
-    path('add-restaurant-manager', admin_views.add_restaurant_manager)
+    path('add-restaurant-manager', admin_views.add_restaurant_manager),
+    path('delete-restaurant', admin_views.delete_restaurant)
 ]
 
 urlpatterns = [
