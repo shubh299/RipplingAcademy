@@ -19,6 +19,7 @@ customer_patterns = [
     path('', customer_views.default_path),
     path('add-user', customer_views.add_user),
     path('search-restaurant', customer_views.search_restaurant),
+    path('search-restaurant-dish', customer_views.search_dish_by_restaurant)
 ]
 
 urlpatterns = [

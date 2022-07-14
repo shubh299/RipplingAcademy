@@ -30,3 +30,7 @@ def get_restaurant_by_filter(restaurant_name: str, cuisine: List) -> QuerySet:
         return Restaurant.objects(Q(name__icontains=restaurant_name))
 
     return Restaurant.objects(Q(name__icontains=restaurant_name) & Q(cuisines=cuisine))
+
+
+def get_dishes_by_restaurant_name(restaurant_id: str) -> QuerySet:
+    return Dish.objects(restaurant_from=restaurant_id)

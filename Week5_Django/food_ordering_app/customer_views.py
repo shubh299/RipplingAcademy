@@ -3,16 +3,16 @@ from typing import Dict
 
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_POST, require_GET
+from django.views.decorators.http import require_POST
 from django.utils.crypto import get_random_string
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from food_ordering_app.constants import AUTH_TOKEN_LENGTH
-from food_ordering_app.db_queries import get_user_from_db_by_email, get_restaurant_by_filter
+from food_ordering_app.db_queries import *
 from food_ordering_app.models import User
 from food_ordering_app.processing_exceptions import *
-from food_ordering_app.serializers import RestaurantSerializer
+from food_ordering_app.serializers import RestaurantSerializer, DishSerializer
 from food_ordering_app.utility_functions import get_parameter_dict, check_params
 
 
@@ -74,4 +74,15 @@ def search_restaurant(request):
     cuisines = request.GET.get('cuisines', list())
     restaurants = get_restaurant_by_filter(restaurant_name, cuisines)
     serializer = RestaurantSerializer(restaurants, many=True)
+    return Response(serializer.data)
+
+
+@api_view(('GET',))
+def search_dish_by_restaurant(request):
+    if 'restaurant-id' not in request.GET:
+        return HttpResponseBadRequest('No restaurant asked')
+    restaurant_id = request.GET['restaurant-id']
+    dishes = get_dishes_by_restaurant_name(restaurant_id)
+    print(dishes)
+    serializer = DishSerializer(dishes, many=True)
     return Response(serializer.data)
