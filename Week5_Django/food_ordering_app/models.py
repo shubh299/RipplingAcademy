@@ -24,7 +24,7 @@ class Dish(Document):
     is_veg = BooleanField()
     cuisine = StringField()
     availability = BooleanField(default=True)
-    restaurant_from = ReferenceField(Restaurant)
+    restaurant_from = ReferenceField(Restaurant, reverse_delete_rule=CASCADE)
     # availability_duration = ListField()
 
 

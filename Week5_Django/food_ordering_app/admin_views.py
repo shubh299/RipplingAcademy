@@ -2,20 +2,31 @@ import json
 from typing import Dict
 
 from django.http import HttpResponse, HttpResponseBadRequest
-from django.views.decorators.csrf import csrf_exempt
 from django.utils.crypto import get_random_string
-from django.views.decorators.http import require_POST
+from rest_framework.decorators import api_view
+from rest_framework.request import Request
+from rest_framework.response import Response
 
 from food_ordering_app.constants import AUTH_TOKEN_LENGTH
 from food_ordering_app.db_queries import *
 from food_ordering_app.models import Restaurant, User
 from food_ordering_app.processing_exceptions import *
+from food_ordering_app.serializers import UserSerializer, RestaurantSerializer
 from food_ordering_app.utility_functions import get_parameter_dict, check_params
 
 
 # TODO: make process functions shorter
-# TODO: check for authentication
-# TODO: add drf
+
+
+def check_admin_token(request: Request) -> None:
+    try:
+        auth_token = request.query_params['auth-token']
+    except KeyError:
+        raise InvalidTokenException("auth token missing")
+    user = get_user_by_token(auth_token)
+    if len(user) == 0 or user[0].user_type != 'app_admin':
+        raise InvalidTokenException("wrong token")
+    pass
 
 
 def process_manager_parameters(parameters: Dict) -> User:
@@ -34,10 +45,11 @@ def process_manager_parameters(parameters: Dict) -> User:
     if user_type != "restaurant_manager":
         raise WrongParameter(f"wrong user type: expected restaurant_manager, got {user_type}")
 
-    new_manager = User(user_type="restaurant_manager")
-    new_manager.email = manager_email
-    new_manager.auth_token = get_random_string(length=AUTH_TOKEN_LENGTH)
-
+    new_manager = User(
+        email=manager_email,
+        user_type="restaurant_manager",
+        auth_token=get_random_string(length=AUTH_TOKEN_LENGTH)
+    )
     return new_manager
 
 
@@ -64,12 +76,14 @@ def process_new_restaurant_parameters(parameters: Dict) -> Restaurant:
     if len(restaurant_in_db) != 0:
         raise RestaurantExistsException("Restaurant already exists")
 
-    new_restaurant = Restaurant()
-    new_restaurant.name = parameters.get("restaurant-name")
-    new_restaurant.address = parameters.get("restaurant-address")
-    new_restaurant.cuisines = parameters.get("restaurant-cuisines")
-    new_restaurant.logo = parameters.get("restaurant-logo")
-    new_restaurant.manager = manager_in_db
+    new_restaurant = Restaurant(
+        name=parameters.get("restaurant-name"),
+        address=parameters.get("restaurant-address"),
+        cuisines=parameters.get("restaurant-cuisines"),
+        logo=parameters.get("restaurant-logo"),
+        manager=manager_in_db
+    )
+
     return new_restaurant
 
 
@@ -86,24 +100,25 @@ def get_restaurant(parameters: Dict) -> Restaurant:
     return restaurant_in_db[0]
 
 
-def default_path(request):
-    print(request)
-    return HttpResponse("admin_home")
-
-
 """
 views start here
 """
 
 
-@csrf_exempt
-@require_POST
+def default_path(request):
+    print(request)
+    return HttpResponse("admin_home")
+
+
+@api_view(('POST',))
 def add_restaurant_manager(request):
     try:
+        check_admin_token(request)
         parameters = get_parameter_dict(request.body)
         new_manager = process_manager_parameters(parameters)
         new_manager.save()
-        return HttpResponse(json.dumps({"auth-token": new_manager.auth_token}))
+        user_serializer = UserSerializer(new_manager, many=False)
+        return Response(user_serializer.data)
     except InsufficientParameters as insufficient_parameters:
         print("Exception:", insufficient_parameters)
     except WrongParameter as wrong_parameters:
@@ -113,17 +128,20 @@ def add_restaurant_manager(request):
         return HttpResponseBadRequest("User Exists")
     except BadRequestBody as error:
         print("Exception:", error)
+    except InvalidTokenException as error:
+        print("Exception:", error)
     return HttpResponseBadRequest("Wrong parameters/parameters missing")
 
 
-@csrf_exempt
-@require_POST
+@api_view(('POST',))
 def add_restaurant(request):
     try:
+        check_admin_token(request)
         parameters = get_parameter_dict(request.body)
         new_restaurant = process_new_restaurant_parameters(parameters)
         new_restaurant.save()
-        return HttpResponse("Got new restaurant request")
+        restaurant_serializer = RestaurantSerializer(new_restaurant, many=False)
+        return Response(restaurant_serializer.data)
     except InsufficientParameters as insufficient_parameters:
         print("Exception:", insufficient_parameters)
     except WrongParameter as wrong_parameters:
@@ -133,17 +151,20 @@ def add_restaurant(request):
         return HttpResponseBadRequest("Restaurant already exists")
     except BadRequestBody as error:
         print("Exception:", error)
+    except InvalidTokenException as error:
+        print("Exception:", error)
     return HttpResponseBadRequest("Wrong parameters/parameters missing")
 
 
-@csrf_exempt
-@require_POST
+@api_view(('POST',))
 def delete_restaurant(request):
     try:
+        check_admin_token(request)
         parameters = get_parameter_dict(request.body)
         restaurant = get_restaurant(parameters)
+        restaurant_serializer = RestaurantSerializer(restaurant, many=False)
         restaurant.delete()
-        return HttpResponse("deleted restaurant")
+        return Response(restaurant_serializer.data)
     except InsufficientParameters as error:
         print("Exception:", error)
     except RestaurantNotFoundException as error:
@@ -151,5 +172,6 @@ def delete_restaurant(request):
         return HttpResponseBadRequest("Restaurant Not Found")
     except BadRequestBody as error:
         print("Exception:", error)
+    except InvalidTokenException as error:
+        print("Exception:", error)
     return HttpResponseBadRequest("Wrong parameters/parameters missing")
-

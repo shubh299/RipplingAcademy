@@ -6,6 +6,10 @@ class WrongParameter(Exception):
     pass
 
 
+class InvalidTokenException(Exception):
+    pass
+
+
 class UserNotFoundException(Exception):
     pass
 
