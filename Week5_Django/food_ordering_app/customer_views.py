@@ -1,9 +1,6 @@
-import json
 from typing import Dict
 
-from django.http import HttpResponse, HttpResponseBadRequest
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_POST
 from django.utils.crypto import get_random_string
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -12,7 +9,7 @@ from food_ordering_app.constants import AUTH_TOKEN_LENGTH
 from food_ordering_app.db_queries import *
 from food_ordering_app.models import User, Order
 from food_ordering_app.processing_exceptions import *
-from food_ordering_app.serializers import RestaurantSerializer, DishSerializer, OrderSerializer
+from food_ordering_app.serializers import RestaurantSerializer, DishSerializer, OrderSerializer, UserSerializer
 from food_ordering_app.utility_functions import get_parameter_dict, check_params
 
 
@@ -72,27 +69,28 @@ views start here
 
 def default_path(request):
     print(request)
-    return HttpResponse("Hi")
+    return Response("Hi", status=200)
 
 
 @csrf_exempt
-@require_POST
+@api_view(('POST',))
 def add_user(request):
     try:
         parameters = get_parameter_dict(request.body)
         new_user = process_user_params(parameters)
         new_user.save()
-        return HttpResponse(json.dumps({"auth-token": new_user.auth_token}))
+        user_serializer = UserSerializer(new_user)
+        return Response(user_serializer.data)
     except InsufficientParameters as insufficient_parameters:
         print("Exception:", insufficient_parameters)
     except WrongParameter as wrong_parameters:
         print("Exception:", wrong_parameters)
     except UserExistsException as error:
         print("Exception:", error)
-        return HttpResponseBadRequest("User Exists")
+        return Response("User Exists", status=400)
     except BadRequestBody as error:
         print("Exception:", error)
-    return HttpResponseBadRequest("Wrong parameters/parameters missing")
+    return Response("Wrong parameters/parameters missing", status=400)
 
 
 @api_view(('GET',))
@@ -107,7 +105,7 @@ def search_restaurant(request):
 @api_view(('GET',))
 def search_dish_by_restaurant(request):
     if 'restaurant-id' not in request.GET:
-        return HttpResponseBadRequest('No restaurant asked')
+        return Response('restaurant-id missing', status=400)
     restaurant_id = request.GET['restaurant-id']
     dishes = get_dishes_by_restaurant_name(restaurant_id)
     serializer = DishSerializer(dishes, many=True)
@@ -117,7 +115,7 @@ def search_dish_by_restaurant(request):
 @api_view(('GET',))
 def search_dish_across_restaurants(request):
     if 'dish-name' not in request.GET:
-        return HttpResponseBadRequest('No dishes asked')
+        return Response('dish parameter missing', status=400)
     dish_name = request.GET['dish-name']
     dishes = get_dishes_by_name(dish_name)
     serializer = DishSerializer(dishes, many=True)
@@ -131,7 +129,7 @@ def place_order(request):
         auth_token = request.query_params['auth-token']
         user = get_user_by_token(auth_token)
         if len(user) == 0 or user[0].user_type != "customer":
-            return HttpResponseBadRequest("Wrong auth token")
+            return Response("Wrong auth token", status=400)
         user = user[0]
         parameters = get_parameter_dict(request.body)
         new_order = process_order_params(parameters)
@@ -147,4 +145,4 @@ def place_order(request):
         print("Exception:", error)
     except BadRequestBody as error:
         print("Exception:", error)
-    return HttpResponseBadRequest("Wrong parameters/parameters missing")
+    return Response("Wrong parameters/parameters missing", status=400)

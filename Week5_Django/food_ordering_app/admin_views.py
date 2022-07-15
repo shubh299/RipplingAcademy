@@ -1,4 +1,3 @@
-import json
 from typing import Dict
 
 from django.http import HttpResponse, HttpResponseBadRequest
@@ -27,7 +26,6 @@ def check_admin_token(request: Request) -> None:
     user = get_user_by_token(auth_token)
     if len(user) == 0 or user[0].user_type != 'app_admin':
         raise InvalidTokenException("wrong token")
-    pass
 
 
 def process_manager_parameters(parameters: Dict) -> User:
@@ -126,14 +124,14 @@ def add_restaurant_manager(request):
         print("Exception:", wrong_parameters)
     except UserExistsException as error:
         print("Exception:", error)
-        return HttpResponseBadRequest("User Exists")
+        return Response("User Exists", status=400)
     except BadRequestBody as error:
         print("Exception:", error)
     except InvalidTokenException as error:
         print("Exception:", error)
     except ValidationError as error:
         print("Exception", error)
-    return HttpResponseBadRequest("Wrong parameters/parameters missing")
+    return Response("Wrong parameters/parameters missing", status=400)
 
 
 @api_view(('POST',))
@@ -151,14 +149,14 @@ def add_restaurant(request):
         print("Exception:", wrong_parameters)
     except RestaurantExistsException as restaurant_found:
         print("Exception:", restaurant_found)
-        return HttpResponseBadRequest("Restaurant already exists")
+        return Response("Restaurant already exists", status=400)
     except BadRequestBody as error:
         print("Exception:", error)
     except InvalidTokenException as error:
         print("Exception:", error)
     except ValidationError as error:
         print("Exception", error)
-    return HttpResponseBadRequest("Wrong parameters/parameters missing")
+    return Response("Wrong parameters/parameters missing", status=400)
 
 
 @api_view(('POST',))
@@ -174,11 +172,11 @@ def delete_restaurant(request):
         print("Exception:", error)
     except RestaurantNotFoundException as error:
         print("Exception:", error)
-        return HttpResponseBadRequest("Restaurant Not Found")
+        return Response("Restaurant Not Found", status=400)
     except BadRequestBody as error:
         print("Exception:", error)
     except InvalidTokenException as error:
         print("Exception:", error)
     except ValidationError as error:
         print("Exception", error)
-    return HttpResponseBadRequest("Wrong parameters/parameters missing")
+    return Response("Wrong parameters/parameters missing", status=400)

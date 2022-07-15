@@ -44,8 +44,8 @@ def get_dishes_by_name(dish_name: str) -> QuerySet:
     return Dish.objects(Q(name__icontains=dish_name) | Q(description__icontains=dish_name))
 
 
-def get_user_by_token(access_token: str) -> QuerySet:
-    return User.objects(auth_token=access_token)
+def get_user_by_token(auth_token: str) -> QuerySet:
+    return User.objects(auth_token=auth_token)
 
 
 def get_dishes_by_id(dish_id_list: List) -> QuerySet:
