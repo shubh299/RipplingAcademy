@@ -3,6 +3,7 @@ from typing import Dict
 
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.utils.crypto import get_random_string
+from mongoengine import ValidationError
 from rest_framework.decorators import api_view
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -130,6 +131,8 @@ def add_restaurant_manager(request):
         print("Exception:", error)
     except InvalidTokenException as error:
         print("Exception:", error)
+    except ValidationError as error:
+        print("Exception", error)
     return HttpResponseBadRequest("Wrong parameters/parameters missing")
 
 
@@ -153,6 +156,8 @@ def add_restaurant(request):
         print("Exception:", error)
     except InvalidTokenException as error:
         print("Exception:", error)
+    except ValidationError as error:
+        print("Exception", error)
     return HttpResponseBadRequest("Wrong parameters/parameters missing")
 
 
@@ -174,4 +179,6 @@ def delete_restaurant(request):
         print("Exception:", error)
     except InvalidTokenException as error:
         print("Exception:", error)
+    except ValidationError as error:
+        print("Exception", error)
     return HttpResponseBadRequest("Wrong parameters/parameters missing")
