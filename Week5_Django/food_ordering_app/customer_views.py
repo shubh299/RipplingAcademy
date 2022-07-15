@@ -10,9 +10,9 @@ from rest_framework.response import Response
 
 from food_ordering_app.constants import AUTH_TOKEN_LENGTH
 from food_ordering_app.db_queries import *
-from food_ordering_app.models import User
+from food_ordering_app.models import User, Order
 from food_ordering_app.processing_exceptions import *
-from food_ordering_app.serializers import RestaurantSerializer, DishSerializer
+from food_ordering_app.serializers import RestaurantSerializer, DishSerializer, OrderSerializer
 from food_ordering_app.utility_functions import get_parameter_dict, check_params
 
 
@@ -36,6 +36,33 @@ def process_user_params(parameters: Dict) -> User:
     new_user.user_type = user_type
     new_user.auth_token = get_random_string(length=AUTH_TOKEN_LENGTH)
     return new_user
+
+
+def process_order_params(parameters: Dict) -> Order:
+    expected_parameters = ["restaurant-id", "dishes"]
+
+    check_params(expected_parameters, parameters)
+
+    restaurant = get_restaurant_by_id(parameters.get("restaurant-id"))
+
+    if len(restaurant) == 0:
+        raise RestaurantNotFoundException("restaurant id not in db")
+
+    restaurant = restaurant[0]
+
+    # checking dish ids
+    dish_id_list = parameters.get("dishes").keys()
+    dishes_from_db = get_dishes_by_id(dish_id_list)
+    for dish in dishes_from_db:
+        if dish.restaurant_from != restaurant:
+            raise DishNotFoundException("dish does not exist for this restaurant")
+
+    new_order = Order(
+        restaurant=restaurant,
+        dishes_ordered=parameters.get("dishes")
+    )
+
+    return new_order
 
 
 """
@@ -95,3 +122,29 @@ def search_dish_across_restaurants(request):
     dishes = get_dishes_by_name(dish_name)
     serializer = DishSerializer(dishes, many=True)
     return Response(serializer.data)
+
+
+@csrf_exempt
+@api_view(('POST',))
+def place_order(request):
+    try:
+        auth_token = request.query_params['auth-token']
+        user = get_user_by_token(auth_token)
+        if len(user) == 0 or user[0].user_type != "customer":
+            return HttpResponseBadRequest("Wrong auth token")
+        user = user[0]
+        parameters = get_parameter_dict(request.body)
+        new_order = process_order_params(parameters)
+        new_order.ordered_by = user
+        new_order.save()
+        order_serializer = OrderSerializer(new_order, many=False)
+        return Response(order_serializer.data)
+    except InsufficientParameters as error:
+        print("Exception:", error)
+    except RestaurantNotFoundException as error:
+        print("Exception:", error)
+    except DishNotFoundException as error:
+        print("Exception:", error)
+    except BadRequestBody as error:
+        print("Exception:", error)
+    return HttpResponseBadRequest("Wrong parameters/parameters missing")

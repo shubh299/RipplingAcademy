@@ -29,7 +29,6 @@ class Dish(Document):
 
 
 class Order(Document):
-    order_id = SequenceField(unique=True)
-    restaurant_name = ReferenceField(Restaurant)
+    restaurant = ReferenceField(Restaurant)
     dishes_ordered = DictField()  # format --> dish_name : quantity
     ordered_by = ReferenceField(User)
