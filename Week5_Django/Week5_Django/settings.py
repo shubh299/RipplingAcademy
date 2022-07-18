@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+from typing import Dict
 
 import mongoengine
 
@@ -88,7 +89,11 @@ mongoengine.connect(host="mongodb+srv://food-app-admin:Zhbpg0r8YnUUlPnd@cluster0
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
-
+DATABASES: Dict[str, Dict[str, str]] = {
+    "default": {
+        "ENGINE": "django.db.backends.dummy",
+    },
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators

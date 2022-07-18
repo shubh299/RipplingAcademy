@@ -12,6 +12,8 @@ from food_ordering_app.processing_exceptions import *
 from food_ordering_app.serializers import RestaurantSerializer, DishSerializer, OrderSerializer, UserSerializer
 from food_ordering_app.utility_functions import get_parameter_dict, check_params
 
+from rest_framework_mongoengine import viewsets
+
 
 def process_user_params(parameters: Dict) -> User:
     expected_parameters = ["user-email", "user-type"]
@@ -91,15 +93,6 @@ def add_user(request):
     except BadRequestBody as error:
         print("Exception:", error)
     return Response("Wrong parameters/parameters missing", status=400)
-
-
-@api_view(('GET',))
-def search_restaurant(request):
-    restaurant_name = request.GET.get('name', '')
-    cuisines = request.GET.get('cuisines', list())
-    restaurants = get_restaurant_by_filter(restaurant_name, cuisines)
-    serializer = RestaurantSerializer(restaurants, many=True)
-    return Response(serializer.data)
 
 
 @api_view(('GET',))
